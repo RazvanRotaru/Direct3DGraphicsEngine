@@ -1,7 +1,20 @@
 #pragma once
 #include "MinWindows.h"
+#include "EngineException.h"
 
 class Window {
+public:
+	class WindowException : public EngineException {
+	public:
+		WindowException(int line, const char* file, HRESULT hr) noexcept;
+		const char* what() const noexcept override;
+		virtual const char* GetType() const noexcept override;
+		static std::string TranslateErrorCode(HRESULT hr) noexcept;
+		HRESULT GetErrorCode() const noexcept;
+		std::string GetErrorString() const noexcept;
+	private:
+		HRESULT hr;
+	};
 private:
 	class WindowClass {
 	public:
@@ -32,3 +45,4 @@ private:
 	HWND hWnd;
 };
 
+#define CHWND_EXCEPT(hr) Window::WindowException(__LINE__, __FILE__, hr)
