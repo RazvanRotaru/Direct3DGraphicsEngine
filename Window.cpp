@@ -11,12 +11,12 @@ Window::WindowClass::WindowClass() noexcept : hInstance(GetModuleHandle(nullptr)
 		HandleMsgSetup,	// lpfnWndProc
 		0,				// cbClsExtra
 		0,				// cvWndExtra
-		GetInstance(),		// hInstance
+		GetInstance(),	// hInstance
 		nullptr,		// hIcon
 		nullptr,		// hCursor
 		nullptr,		// hbrBackground
 		nullptr,		// lpszMenuName
-		GetName(),	// lpszClassName
+		GetName(),		// lpszClassName
 		nullptr			// hIconSm
 	};
 
@@ -35,7 +35,7 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept {
 	return wndClass.hInstance;
 }
 
-Window::Window(int width, int height, LPCWSTR name) noexcept : width(width), height(height) {
+Window::Window(int width, int height, LPCWSTR name) : width(width), height(height) {
 	RECT wr = {
 		100L,
 		100L,
@@ -43,7 +43,9 @@ Window::Window(int width, int height, LPCWSTR name) noexcept : width(width), hei
 		height + 100L
 	};
 
-	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
+	if (FAILED(AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE))) {
+		throw CHWND_LAST_EXCEPT();
+	}
 
 	hWnd = CreateWindow(
 		WindowClass::GetName(),						// lpClassName
@@ -57,6 +59,8 @@ Window::Window(int width, int height, LPCWSTR name) noexcept : width(width), hei
 		WindowClass::GetInstance(),					// hInstance
 		this										// lpParam
 	);
+
+	if (hWnd == nullptr) { throw CHWND_LAST_EXCEPT(); }
 
 	ShowWindow(hWnd, SW_SHOW);
 }
@@ -122,10 +126,10 @@ Window::WindowException::WindowException(int line, const char* file, HRESULT hr)
 
 const char* Window::WindowException::what() const noexcept {
 	std::ostringstream oss;
-	oss << "\033[" << GetType() << "m" << std::endl
-		<< "Error Code: \033[" << GetErrorCode() << "m" << std::endl
-		<< "Description \033[" << GetOriginString() << "m" << std::endl
-		<< "\033[" << GetOriginString() << "m";
+	oss << GetType() << std::endl
+		<< "Error Code: " << GetErrorCode() << std::endl
+		<< "Description " << GetErrorString() << std::endl
+		<< GetOriginString();
 
 	whatBuffer = oss.str();
 	return whatBuffer.c_str();
@@ -137,12 +141,12 @@ const char* Window::WindowException::GetType() const noexcept {
 
 std::string Window::WindowException::TranslateErrorCode(HRESULT hr) noexcept {
 	char* pMsgBuff = nullptr;
-	DWORD nMsgLen = FormatMessage(
+	DWORD nMsgLen = FormatMessageA(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 		nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		reinterpret_cast<LPWSTR>(&pMsgBuff), 0, nullptr
+		reinterpret_cast<LPSTR>(&pMsgBuff), 0, nullptr
 	);
-	
+
 	if (nMsgLen == 0) { return "Undefined error code"; }
 
 	std::string errString = pMsgBuff;

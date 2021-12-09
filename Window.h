@@ -31,7 +31,7 @@ private:
 		HINSTANCE hInstance;
 	};
 public:
-	Window(int width, int height, LPCWSTR name) noexcept;
+	Window(int width, int height, LPCWSTR name);
 	~Window();
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
@@ -46,3 +46,4 @@ private:
 };
 
 #define CHWND_EXCEPT(hr) Window::WindowException(__LINE__, __FILE__, hr)
+#define CHWND_LAST_EXCEPT(hr) Window::WindowException(__LINE__, __FILE__, GetLastError())

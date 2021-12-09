@@ -5,8 +5,8 @@ EngineException::EngineException(int line, const char* file) noexcept : line(lin
 
 const char* EngineException::what() const noexcept {
 	std::ostringstream oss;
-	oss << "\033[" << GetType() << "m" << std::endl
-		<< "\033[" << GetOriginString() << "m";
+	oss << GetType() << std::endl
+		<< GetOriginString();
 
 	whatBuffer = oss.str();
 	return whatBuffer.c_str();
@@ -26,7 +26,7 @@ const std::string& EngineException::GetFile() const noexcept {
 
 std::string EngineException::GetOriginString() const noexcept {
 	std::ostringstream oss;
-	oss << "File: \033[" << file << "m" << std::endl
-		<< "Line: \033[" << line << "m";
+	oss << "File: " << file << std::endl
+		<< "Line: " << line;
 	return oss.str();
 }
