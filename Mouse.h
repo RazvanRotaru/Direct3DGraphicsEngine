@@ -66,6 +66,6 @@ private:
 	bool isInWindow = false;
 	int wheelDeltaCarry = 0;
 	int x = 0, y = 0;
-private:
+public:
 	IODevice::Buffer<Event> buffer;
 };

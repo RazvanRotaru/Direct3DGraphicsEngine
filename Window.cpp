@@ -69,6 +69,12 @@ Window::~Window() {
 	DestroyWindow(hWnd);
 }
 
+void Window::SetTitle(const std::string& title) {
+	if (SetWindowTextA(hWnd, title.c_str()) == 0) {
+		throw CHWND_LAST_EXCEPT();
+	}
+}
+
 LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept {
 	if (msg == WM_CREATE) {
 		const CREATESTRUCT* const pCreate = reinterpret_cast<CREATESTRUCT*>(lParam);
@@ -108,12 +114,12 @@ LRESULT Window::HandlMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noex
 			kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
 		}
 		break;
-	
+
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 		kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
 		break;
-	
+
 	case WM_CHAR:
 		kbd.OnChar(static_cast<unsigned char>(wParam));
 		break;
@@ -135,6 +141,7 @@ LRESULT Window::HandlMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noex
 	//	// TODO: handle middle-click
 	//	break;
 	case WM_MOUSEMOVE:
+	{
 		const POINTS pt = MAKEPOINTS(lParam);
 		// Coursor in client region
 		if (pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height) {
@@ -155,18 +162,21 @@ LRESULT Window::HandlMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noex
 			}
 		}
 		break;
-	
+	}
 	case WM_LBUTTONDOWN:
+	{
 		const POINTS pt = MAKEPOINTS(lParam);
 		mouse.OnButtonPressed(pt.x, pt.y, Mouse::Button::Left);
 		break;
-	
+	}
 	case WM_RBUTTONDOWN:
+	{
 		const POINTS pt = MAKEPOINTS(lParam);
 		mouse.OnButtonPressed(pt.x, pt.y, Mouse::Button::Right);
 		break;
-
+	}
 	case WM_LBUTTONUP:
+	{
 		const POINTS pt = MAKEPOINTS(lParam);
 		mouse.OnButtonReleased(pt.x, pt.y, Mouse::Button::Left);
 
@@ -176,8 +186,9 @@ LRESULT Window::HandlMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noex
 			mouse.OnMouseLeave();
 		}
 		break;
-	
+	}
 	case WM_RBUTTONUP:
+	{
 		const POINTS pt = MAKEPOINTS(lParam);
 		mouse.OnButtonReleased(pt.x, pt.y, Mouse::Button::Right);
 
@@ -187,12 +198,14 @@ LRESULT Window::HandlMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noex
 			mouse.OnMouseLeave();
 		}
 		break;
-	
+	}
 	case WM_MOUSEWHEEL:
+	{
 		const POINTS pt = MAKEPOINTS(lParam);
 		const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 		mouse.OnScrollDelta(pt.x, pt.y, delta);
 		break;
+	}
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
