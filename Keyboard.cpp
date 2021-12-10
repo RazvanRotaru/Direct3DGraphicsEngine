@@ -1,6 +1,6 @@
 #include "Keyboard.h"
 
-bool Keyboard::IsKeyPressed(unsigned char keyCode) const noexcept {
+bool Keyboard::KeyPressed(unsigned char keyCode) const noexcept {
 	return keyStates[keyCode];
 }
 

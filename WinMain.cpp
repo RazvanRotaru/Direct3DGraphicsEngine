@@ -11,7 +11,7 @@ int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR lp
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 
-			if (wnd.kbd.IsKeyPressed(VK_MENU)) {
+			if (wnd.kbd.KeyPressed(VK_MENU)) {
 				MessageBox(nullptr, TEXT("DAU FLASH"), TEXT("No details available"), MB_OK | MB_ICONEXCLAMATION);
 			}
 

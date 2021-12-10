@@ -43,7 +43,7 @@ Window::Window(int width, int height, LPCWSTR name) : width(width), height(heigh
 		height + 100L
 	};
 
-	if (FAILED(AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE))) {
+	if (!AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE)) {
 		throw CHWND_LAST_EXCEPT();
 	}
 
@@ -108,10 +108,12 @@ LRESULT Window::HandlMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noex
 			kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
 		}
 		break;
+	
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 		kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
 		break;
+	
 	case WM_CHAR:
 		kbd.OnChar(static_cast<unsigned char>(wParam));
 		break;
@@ -123,14 +125,73 @@ LRESULT Window::HandlMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noex
 		-> lParam: (int16 x-coordinate, int16 y-coordinate)
 			*usage* int16 GET_X_LPARAM(lParam) or POINTS MAKEPOINTS(lParam)
 	*/
+	//case WM_LBUTTONDOWN:
+	//	// TODO: handle left click
+	//	break;
+	//case WM_RBUTTONDOWN:
+	//	// TODO: handle right-click
+	//	break;
+	//case WM_MBUTTONDOWN:
+	//	// TODO: handle middle-click
+	//	break;
+	case WM_MOUSEMOVE:
+		const POINTS pt = MAKEPOINTS(lParam);
+		// Coursor in client region
+		if (pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height) {
+			mouse.OnMouseMove(pt.x, pt.y);
+			if (!mouse.InWindow()) {
+				SetCapture(hWnd);
+				mouse.OnMouseEnter();
+			}
+		}
+		// Coursor not in client
+		else {
+			// Maintain capture if any button is pressed
+			if (wParam & (MK_LBUTTON | MK_RBUTTON)) {
+				mouse.OnMouseMove(pt.x, pt.y);
+			} else {
+				ReleaseCapture();
+				mouse.OnMouseLeave();
+			}
+		}
+		break;
+	
 	case WM_LBUTTONDOWN:
-		// TODO: handle left click
+		const POINTS pt = MAKEPOINTS(lParam);
+		mouse.OnButtonPressed(pt.x, pt.y, Mouse::Button::Left);
 		break;
+	
 	case WM_RBUTTONDOWN:
-		// TODO: handle right-click
+		const POINTS pt = MAKEPOINTS(lParam);
+		mouse.OnButtonPressed(pt.x, pt.y, Mouse::Button::Right);
 		break;
-	case WM_MBUTTONDOWN:
-		// TODO: handle middle-click
+
+	case WM_LBUTTONUP:
+		const POINTS pt = MAKEPOINTS(lParam);
+		mouse.OnButtonReleased(pt.x, pt.y, Mouse::Button::Left);
+
+		// Release mouse if outside of window
+		if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height) {
+			ReleaseCapture();
+			mouse.OnMouseLeave();
+		}
+		break;
+	
+	case WM_RBUTTONUP:
+		const POINTS pt = MAKEPOINTS(lParam);
+		mouse.OnButtonReleased(pt.x, pt.y, Mouse::Button::Right);
+
+		// Release mouse if outside of window
+		if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height) {
+			ReleaseCapture();
+			mouse.OnMouseLeave();
+		}
+		break;
+	
+	case WM_MOUSEWHEEL:
+		const POINTS pt = MAKEPOINTS(lParam);
+		const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+		mouse.OnScrollDelta(pt.x, pt.y, delta);
 		break;
 	}
 
