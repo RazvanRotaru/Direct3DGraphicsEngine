@@ -59,8 +59,27 @@ Window::Window(int width, int height, LPCWSTR name) : width(width), height(heigh
 		WindowClass::GetInstance(),					// hInstance
 		this										// lpParam
 	);
-
+	
 	if (hWnd == nullptr) { throw CHWND_LAST_EXCEPT(); }
+
+	/********************* MAKE WINDOW TRANSPARENT *********************/
+
+	/*if (!SetWindowRgn(hWnd, nullptr, FALSE)) {
+		throw CHWND_LAST_EXCEPT();
+	}*/
+
+	// the code below makes the WHOLE window transparent, not just the client area
+
+	/*if (FAILED(SetWindowLong(hWnd, GWL_EXSTYLE,
+							 GetWindowLong(hWnd, GWL_EXSTYLE) 
+							 | WS_EX_LAYERED))) {
+		throw CHWND_LAST_EXCEPT();
+	}
+
+	if (!SetLayeredWindowAttributes(hWnd, 0, 0, LWA_ALPHA)) {
+		throw CHWND_LAST_EXCEPT();
+	}*/
+
 
 	ShowWindow(hWnd, SW_SHOW);
 }
