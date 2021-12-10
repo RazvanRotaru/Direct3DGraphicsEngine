@@ -12,20 +12,46 @@ int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR lp
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 
-			// test code
+			//// test mouse input
+			//while (!wnd.mouse.buffer.IsEmpty()) {
+			//	const auto e = wnd.mouse.buffer.ReadInput();
+			//	switch (e.GetType()) {
+			//	case Mouse::Event::Type::Leave:
+			//		wnd.SetTitle("Gone!");
+			//		break;
+			//	case Mouse::Event::Type::Move:
+			//	{
+			//		std::ostringstream oss;
+			//		oss << "Mouse moved to (" << e.GetPosX() << "," << e.GetPosY() << ")";
+			//		wnd.SetTitle(oss.str());
+			//	}
+			//	break;
+			//	}
+			//}
+			// test mouse wheel input
+			static int i = 0;
 			while (!wnd.mouse.buffer.IsEmpty()) {
 				const auto e = wnd.mouse.buffer.ReadInput();
-				switch (e.GetType()) {
-				case Mouse::Event::Type::Leave:
-					wnd.SetTitle("Gone!");
-					break;
-				case Mouse::Event::Type::Move:
-				{
-					std::ostringstream oss;
-					oss << "Mouse moved to (" << e.GetPosX() << "," << e.GetPosY() << ")";
-					wnd.SetTitle(oss.str());
-				}
-				break;
+				if (e.GetType() == Mouse::Event::Type::Scroll) {
+					const auto dir = e.GetPosX() < 0;
+					switch (dir) {
+					case false:
+						i++;
+						{
+							std::ostringstream oss;
+							oss << "Up: " << i;
+							wnd.SetTitle(oss.str());
+						}
+						break;
+					case true:
+						i--;
+						{
+							std::ostringstream oss;
+							oss << "Down: " << i;
+							wnd.SetTitle(oss.str());
+						}
+						break;
+					}
 				}
 			}
 

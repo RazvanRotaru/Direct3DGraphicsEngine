@@ -1,6 +1,8 @@
 #pragma once
 #include "IODevice.h"
 
+// TODO create Keyboard.ReadInput() method to use instead of Keyboard.keyBuffer.ReadInput()
+
 class Keyboard : public IODevice {
 	friend class Window;
 public:
