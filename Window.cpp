@@ -94,14 +94,29 @@ LRESULT Window::HandlMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noex
 		PostQuitMessage(105);
 		return 0;
 
-	// Handle input
-	case WM_KEYDOWN:
-		if (wParam == '*') {}
-		break;
-	case WM_CHAR:
-		// TODO: register input in textBuffer
+	/************************* HANDLE INPUT *************************/
+
+	case WM_KILLFOCUS:
+		kbd.ClearState();
+		// TODO: maybe clear mouse state too
 		break;
 
+	/************ HANDLE KEYBOARD INPUT ************/
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+		if (!(lParam & (1 << 30)) || kbd.IsAutorepeatEnabled()) {
+			kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
+		}
+		break;
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
+		break;
+	case WM_CHAR:
+		kbd.OnChar(static_cast<unsigned char>(wParam));
+		break;
+
+	/************ HANDLE MOUSE INPUT ************/
 	/*
 	WM_xBUTTON_DOWN
 		-> wParam: mask of modifiers (MK_SHIFT | MK_CONTROLL)

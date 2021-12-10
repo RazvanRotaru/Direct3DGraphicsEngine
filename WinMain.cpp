@@ -10,6 +10,11 @@ int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR lp
 		while ((gResult = GetMessage(&msg, nullptr, 0, 0)) > 0) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+
+			if (wnd.kbd.IsKeyPressed(VK_MENU)) {
+				MessageBox(nullptr, TEXT("DAU FLASH"), TEXT("No details available"), MB_OK | MB_ICONEXCLAMATION);
+			}
+
 		}
 		return gResult >= 0 ? msg.wParam : -1;
 	} catch (const EngineException& e) {
