@@ -1,8 +1,7 @@
 #pragma once
-#include <queue>
-#include <bitset>
+#include "IODevice.h"
 
-class Keyboard {
+class Keyboard : public IODevice {
 	friend class Window;
 public:
 	class Event {
@@ -24,31 +23,6 @@ public:
 		bool IsInvalidEvent()	const noexcept { return type == Type::Invalid; }
 		unsigned char GetCode() const noexcept { return code; }
 	};
-private:
-	template<typename T>
-	class Buffer {
-	public:
-		Buffer<T>() = default;
-	public:
-		bool IsEmpty() { return buff.empty(); }
-		void Clear() { buff = std::queue<T>(); }
-		T ReadInput() {
-			if (buff.size() > 0u) {
-				T elm = buff.front();
-				buff.pop();
-				return elm;
-			}
-			return {};
-		}
-		void Add(T elm) {
-			while (buff.size() > bufferSize - 1) {
-				buff.pop();
-			}
-			buff.push(elm); 
-		}
-	private:
-		std::queue<T> buff;
-	};
 public:
 	Keyboard() = default;
 	Keyboard(const Keyboard&) = delete;
@@ -64,14 +38,13 @@ private:
 	void OnKeyPressed(unsigned char keyCode) noexcept;
 	void OnKeyReleased(unsigned char keyCode) noexcept;
 	void OnChar(char character) noexcept;
-	void ClearState() noexcept;
+	virtual void ClearState() noexcept override;
 private:
 	static constexpr unsigned int nKeys = 256u;
-	static constexpr unsigned int bufferSize = 16u;
 	bool autorepeatEnabled = false;
 	std::bitset<nKeys> keyStates;
 public:
-	Buffer<Event> keyBuffer;
-	Buffer<char> charBuffer;
+	IODevice::Buffer<Event> keyBuffer;
+	IODevice::Buffer<char> charBuffer;
 };
 
