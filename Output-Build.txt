@@ -1,0 +1,8 @@
+﻿Build started...
+1>------ Build started: Project: Enigne, Configuration: Debug x64 ------
+1>Math.cpp
+1>D:\Master\An 2\Semestru 1\MG3D\Engine\Enigne\Math.h(27,2): warning C4091: 'static ': ignored on left of 'Math' when no variable is declared
+1>D:\Master\An 2\Semestru 1\MG3D\Engine\Enigne\Math.cpp(78): warning C4715: 'Math::Rotation': not all control paths return a value
+1>Enigne.vcxproj -> D:\Master\An 2\Semestru 1\MG3D\Engine\Enigne\x64\Debug\Enigne.exe
+1>Done building project "Enigne.vcxproj".
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========

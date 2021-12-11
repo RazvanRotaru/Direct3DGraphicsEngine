@@ -167,6 +167,7 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IODevice.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Math.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="IODevice.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="MinWindows.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Timer.h" />

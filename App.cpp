@@ -1,4 +1,5 @@
 #include "App.h"
+#include "Math.h"
 #include <sstream>
 #include <iomanip>
 
@@ -22,7 +23,9 @@ void App::Tick() {
 
 	const float c = sin(timer.Peek()) * 0.5f + 0.5f;
 
+
 	wnd.GFX().ClearBuffer(c, 0, 0);
-	wnd.GFX().DrawTestTriangle();
+	wnd.GFX().DrawTestTriangle(t, Math::ClipCoursor(wnd.mouse.GetPosX(), 800),
+							   -Math::ClipCoursor(wnd.mouse.GetPosY(), 600));
 	wnd.GFX().EndFrame();
 }

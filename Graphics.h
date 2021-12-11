@@ -56,9 +56,10 @@ public:
 	void ClearBuffer(float R, float G, float B) noexcept {
 		const float color[] = { R,G,B,1.0f };
 		pImmContext->ClearRenderTargetView(pTarget.Get(), color);
+		pImmContext->ClearDepthStencilView(pDSView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0.0f);
 	}
 
-	void DrawTestTriangle();
+	void DrawTestTriangle(float angle, float x, float y);
 
 private:
 #ifndef NDEBUG
@@ -68,6 +69,7 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmContext;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSView;
 };
 
 #define GFX_EXCEPT_NOINFO(hr) Graphics::HrException(__LINE__, __FILE__, (hr))
