@@ -2,11 +2,13 @@
 #include "MinWindows.h"
 #include <vector>
 #include <string>
+#include <wrl.h>
+#include <dxgidebug.h>
 
 class DXGIInfoManager {
 public:
 	DXGIInfoManager();
-	~DXGIInfoManager();
+	~DXGIInfoManager() = default;
 	DXGIInfoManager(const DXGIInfoManager&) = delete;
 	DXGIInfoManager& operator=(const DXGIInfoManager&) = delete;
 
@@ -14,6 +16,6 @@ public:
 	std::vector<std::string> GetMessages() const;
 private:
 	unsigned long long next = 0ull;
-	struct IDXGIInfoQueue* pDXGIInfoQueue = nullptr;
+	Microsoft::WRL::ComPtr<IDXGIInfoQueue> pDXGIInfoQueue;
 };
 

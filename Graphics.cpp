@@ -4,6 +4,8 @@
 
 #pragma comment(lib,"d3d11.lib")
 
+namespace wrl = Microsoft::WRL;
+
 Graphics::Graphics(HWND hWnd) {
 	DXGI_SWAP_CHAIN_DESC sd = {
 		DXGI_MODE_DESC {
@@ -53,26 +55,9 @@ Graphics::Graphics(HWND hWnd) {
 		&pImmContext
 	));
 
-	ID3D11Resource* pBackBuffer = nullptr;
-	GFX_THROW_INFO(
-		pSwapChain->GetBuffer(
-			0,
-			__uuidof(ID3D11Resource),
-			reinterpret_cast<void**>(&pBackBuffer)
-		));
-	GFX_THROW_INFO(
-		pDevice->CreateRenderTargetView(
-			pBackBuffer,
-			nullptr,
-			&pTarget
-		));
-	pBackBuffer->Release();
-}
-
-Graphics::~Graphics() {
-	if (pDevice != nullptr) { pDevice->Release(); }
-	if (pSwapChain != nullptr) { pSwapChain->Release(); }
-	if (pImmContext != nullptr) { pImmContext->Release(); }
+	wrl::ComPtr<ID3D11Resource> pBackBuffer = nullptr;
+	GFX_THROW_INFO(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
+	GFX_THROW_INFO(pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget));
 }
 
 void Graphics::EndFrame() {
