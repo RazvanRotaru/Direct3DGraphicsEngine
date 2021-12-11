@@ -9,6 +9,30 @@
 
 class Window {
 public:
+	class Exception : public EngineException {
+		using EngineException::EngineException;
+	public:
+		static std::string TranslateErrorCode(HRESULT hr) noexcept;
+	};
+
+	class HrException : public Exception {
+		using Exception::Exception;
+	public:
+		HrException(int line, const char* file, HRESULT hr) noexcept;
+		const char* what() const noexcept override;
+		const char* GetType() const noexcept override;
+		HRESULT GetErrorCode() const noexcept;
+		std::string GetErrorDescription() const noexcept;
+	private:
+		HRESULT hr;
+	};
+
+	class NoGFXException : public HrException {
+		using HrException::HrException;
+	public:
+		const char* GetType() const noexcept override;
+	};
+public:
 	class WindowException : public EngineException {
 	public:
 		WindowException(int line, const char* file, HRESULT hr) noexcept;
@@ -40,7 +64,7 @@ public:
 	~Window();
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
-	
+
 	void SetTitle(const std::string& title);
 	static std::optional<WPARAM> ProcessMessages();
 	Graphics& GFX();
@@ -59,4 +83,5 @@ private:
 };
 
 #define CHWND_EXCEPT(hr) Window::WindowException(__LINE__, __FILE__, hr)
-#define CHWND_LAST_EXCEPT(hr) Window::WindowException(__LINE__, __FILE__, GetLastError())
+#define CHWND_LAST_EXCEPT() Window::WindowException(__LINE__, __FILE__, GetLastError())
+#define CHWND_NOGFX_EXCEPT() Window::NoGFXException( __LINE__,__FILE__ )

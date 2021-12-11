@@ -161,6 +161,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="dxerr.cpp" />
+    <ClCompile Include="DXGIInfoManager.cpp" />
     <ClCompile Include="EngineException.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IODevice.cpp" />
@@ -172,9 +174,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="DXGetErrorDescription.inl" />
+    <None Include="DXGetErrorString.inl" />
+    <None Include="DXTrace.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="dxerr.h" />
+    <ClInclude Include="DXGIInfoManager.h" />
     <ClInclude Include="EngineException.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="IODevice.h" />
