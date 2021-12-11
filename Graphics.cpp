@@ -1,8 +1,10 @@
 #include "Graphics.h"
 #include "dxerr.h"
 #include <sstream>
+#include <d3dcompiler.h>
 
 #pragma comment(lib,"d3d11.lib")
+#pragma comment(lib, "D3DCompiler.lib")
 
 namespace wrl = Microsoft::WRL;
 
@@ -74,6 +76,136 @@ void Graphics::EndFrame() {
 			throw GFX_EXCEPT(hr);
 		}
 	}
+}
+
+/************************* DEBUG ONLY ***************************/
+
+void Graphics::DrawTestTriangle() {
+	namespace wrl = Microsoft::WRL;
+
+	HRESULT hr;
+
+
+	// Create Internal vertex struct
+	struct Vertex {
+		float x;
+		float y;
+	};
+
+	const Vertex vertices[] = {
+		{ 0.0f, 0.5f },
+		{ 0.5f, -0.5f },
+		{ -0.5f, -0.5f },
+	};
+
+	// Create vertex buffer
+
+	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
+
+	D3D11_BUFFER_DESC  bd = {
+		sizeof(vertices),			// ByteWidth
+		D3D11_USAGE_DEFAULT,		// Usage
+		D3D11_BIND_VERTEX_BUFFER,	// BindFlags
+		0u,							// CPUAccessFlags
+		0u,							// MiscFlags
+		sizeof(Vertex),				// StructuredByteStride
+	};
+
+	D3D11_SUBRESOURCE_DATA data = {
+		vertices,	// pSysMem
+		0u,			// SysMemPitch
+		0u,			// SysMemSlicePitch
+	};
+
+	GFX_THROW_INFO(pDevice->CreateBuffer(&bd, &data, &pVertexBuffer));
+
+	const UINT stride = sizeof(Vertex);
+	const UINT offset = 0u;
+
+	pImmContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+
+	// Create pixel shader
+	wrl::ComPtr<ID3DBlob> pBlob;
+	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
+	GFX_THROW_INFO(D3DReadFileToBlob(TEXT("PixelShader.cso"), &pBlob));
+	GFX_THROW_INFO(pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
+
+	pImmContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
+
+	// Create vertex shader
+	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
+	GFX_THROW_INFO(D3DReadFileToBlob(TEXT("VertexShader.cso"), &pBlob));
+	GFX_THROW_INFO(pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
+
+	pImmContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+
+
+	// create input layout
+	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
+	const D3D11_INPUT_ELEMENT_DESC ied[1] = {
+		{
+			"POSITION",						// SemanticName
+			0u,								// SemanticIndex
+			DXGI_FORMAT_R32G32_FLOAT,		// Format
+			0u,								// InputSlot
+			0u,								// AlignedByteOffset
+			D3D11_INPUT_PER_VERTEX_DATA,	// InputSlotClass
+			0u,								// InstanceDataStepRate
+		}
+	};
+
+	GFX_THROW_INFO(pDevice->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout));
+	pImmContext->IASetInputLayout(pInputLayout.Get());
+
+	// bind render target
+	pImmContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);
+
+	// set primitive topology
+	pImmContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// configure viewport
+	D3D11_VIEWPORT vp = {
+		0.0f,	// TopLeftX
+		0.0f,	// TopLeftY
+		800.0f, // Width
+		600.0f, // Width
+		0.0f,	// MinDepth
+		1.0f,	// MaxDepth
+	};
+	pImmContext->RSSetViewports(1u, &vp);
+
+	GFX_THROW_INFO_ONLY(pImmContext->Draw(3u, 0u));
+}
+
+/************************* DEBUG ONLY ***************************/
+
+Graphics::InfoException::InfoException(
+	int line, const char* file,
+	std::vector<std::string> infoMsgs) noexcept
+	: Exception(line, file) {
+	for (const auto& m : infoMsgs) {
+		info += m;
+		info.push_back('\n');
+	}
+	if (!info.empty()) { info.pop_back(); }
+}
+
+
+const char* Graphics::InfoException::what() const noexcept {
+	std::ostringstream oss;
+	oss << GetType() << std::endl
+		<< "\nError Info: \n" << GetErrorInfo() << std::endl << std::endl;
+	oss << GetOriginString();
+	whatBuffer = oss.str();
+	return whatBuffer.c_str();
+}
+
+const char* Graphics::InfoException::GetType() const noexcept {
+	return "Engine Graphics Info Exception";
+}
+
+std::string Graphics::InfoException::GetErrorInfo() const noexcept {
+	return info;
 }
 
 Graphics::HrException::HrException(

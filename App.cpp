@@ -23,5 +23,6 @@ void App::Tick() {
 	const float c = sin(timer.Peek()) * 0.5f + 0.5f;
 
 	wnd.GFX().ClearBuffer(c, 0, 0);
+	wnd.GFX().DrawTestTriangle();
 	wnd.GFX().EndFrame();
 }
