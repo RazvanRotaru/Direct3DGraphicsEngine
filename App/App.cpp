@@ -19,9 +19,4 @@ void App::Tick() {
 	std::ostringstream oss;
 	oss << "Frame time: " << std::setprecision(1) << std::fixed << t << "s";
 	wnd.SetTitle(oss.str());
-
-	const float c = sin(timer.Peek()) * 0.5f + 0.5f;
-
-	wnd.GFX().ClearBuffer(c, 0, 0);
-	wnd.GFX().EndFrame();
 }

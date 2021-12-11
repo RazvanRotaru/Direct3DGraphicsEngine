@@ -63,8 +63,6 @@ Window::Window(int width, int height, LPCWSTR name) : width(width), height(heigh
 	if (hWnd == nullptr) { throw CHWND_LAST_EXCEPT(); }
 
 	ShowWindow(hWnd, SW_SHOW);
-
-	pGfx = std::make_unique<Graphics>(hWnd);
 }
 
 Window::~Window() {
@@ -85,10 +83,6 @@ std::optional<WPARAM> Window::ProcessMessages() {
 		DispatchMessage(&msg);
 	}
 	return {};
-}
-
-Graphics& Window::GFX() {
-	return *pGfx;
 }
 
 LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept {
