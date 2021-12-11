@@ -88,14 +88,25 @@ void Graphics::DrawTestTriangle() {
 
 	// Create Internal vertex struct
 	struct Vertex {
-		float x;
-		float y;
+		struct {
+			float x;
+			float y;
+		} pos;
+		struct {
+			unsigned char r;
+			unsigned char b;
+			unsigned char g;
+			unsigned char a;
+		} color;
 	};
 
-	const Vertex vertices[] = {
-		{ 0.0f, 0.5f },
-		{ 0.5f, -0.5f },
-		{ -0.5f, -0.5f },
+	Vertex vertices[] = {
+		{ 0.0f, 0.5f, 255u, 0u, 0u, 255u },
+		{ 0.5f, -0.5f, 0u, 255u, 0u, 255u },
+		{ -0.5f, -0.5f, 0u, 0u, 255u, 255u },
+		{ -0.3f, 0.3f, 0u, 255u, 0u, 255u },
+		{ 0.3f, 0.3f, 0u, 0u, 255u, 255u },
+		{ 0.0f, -0.8f, 255u, 0u, 0u, 255u },
 	};
 
 	// Create vertex buffer
@@ -124,6 +135,35 @@ void Graphics::DrawTestTriangle() {
 
 	pImmContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
 
+	// Create index buffer
+	const USHORT indices[] = {
+		0, 1, 2,
+		0, 2, 3,
+		0, 4, 1,
+		2, 1, 5,
+	};
+
+	wrl::ComPtr<ID3D11Buffer> pIndexBuffer;
+
+	D3D11_BUFFER_DESC  ibd = {
+		sizeof(indices),			// ByteWidth
+		D3D11_USAGE_DEFAULT,		// Usage
+		D3D11_BIND_INDEX_BUFFER,	// BindFlags
+		0u,							// CPUAccessFlags
+		0u,							// MiscFlags
+		sizeof(USHORT),				// StructuredByteStride
+	};
+
+	D3D11_SUBRESOURCE_DATA idata = {
+		indices,	// pSysMem
+		0u,			// SysMemPitch
+		0u,			// SysMemSlicePitch
+	};
+
+	GFX_THROW_INFO(pDevice->CreateBuffer(&ibd, &idata, &pIndexBuffer));
+
+	pImmContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
+
 	// Create pixel shader
 	wrl::ComPtr<ID3DBlob> pBlob;
 	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
@@ -142,13 +182,22 @@ void Graphics::DrawTestTriangle() {
 
 	// create input layout
 	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
-	const D3D11_INPUT_ELEMENT_DESC ied[1] = {
-		{
+	const D3D11_INPUT_ELEMENT_DESC ied[2] = {
+		D3D11_INPUT_ELEMENT_DESC {
 			"POSITION",						// SemanticName
 			0u,								// SemanticIndex
 			DXGI_FORMAT_R32G32_FLOAT,		// Format
 			0u,								// InputSlot
-			0u,								// AlignedByteOffset
+			D3D11_APPEND_ALIGNED_ELEMENT,	// AlignedByteOffset
+			D3D11_INPUT_PER_VERTEX_DATA,	// InputSlotClass
+			0u,								// InstanceDataStepRate
+		},
+		D3D11_INPUT_ELEMENT_DESC {
+			"COLOR",						// SemanticName
+			0u,								// SemanticIndex
+			DXGI_FORMAT_R8G8B8A8_UNORM,		// Format
+			0u,								// InputSlot
+			D3D11_APPEND_ALIGNED_ELEMENT,	// AlignedByteOffset
 			D3D11_INPUT_PER_VERTEX_DATA,	// InputSlotClass
 			0u,								// InstanceDataStepRate
 		}
@@ -174,7 +223,7 @@ void Graphics::DrawTestTriangle() {
 	};
 	pImmContext->RSSetViewports(1u, &vp);
 
-	GFX_THROW_INFO_ONLY(pImmContext->Draw(3u, 0u));
+	GFX_THROW_INFO_ONLY(pImmContext->DrawIndexed((UINT)std::size(indices), 0u, 0u));
 }
 
 /************************* DEBUG ONLY ***************************/
