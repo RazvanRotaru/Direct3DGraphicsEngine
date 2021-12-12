@@ -6,7 +6,7 @@
 
 #include <sdkddkver.h>
 
-#ifndef MIN_WINAPI
+#ifndef FULL_WINAPI
 #define WIN32_LEAN_AND_MEAN
 #define NOGDICAPMASKS
 #define NOSYSMETRICS

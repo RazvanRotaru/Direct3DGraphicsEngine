@@ -1,4 +1,4 @@
-#define MIN_WINAPI
+#define FULL_WINAPI
 #include "Surface.h"
 #include <algorithm>
 namespace Gdiplus {

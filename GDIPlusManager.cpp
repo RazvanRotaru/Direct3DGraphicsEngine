@@ -1,4 +1,4 @@
-#define MIN_WINAPI
+#define FULL_WINAPI
 #include "MinWindows.h"
 #include "GDIPlusManager.h"
 #include <algorithm>
