@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "Math.h"
 #include <sstream>
 
 Window::WindowClass Window::WindowClass::wndClass;
@@ -92,6 +93,17 @@ Graphics& Window::GFX() {
 		throw CHWND_NOGFX_EXCEPT();
 	}
 	return *pGfx;
+}
+
+Vector2 Window::GetMousePosition() noexcept {
+	float dx = Math::ClipCoursor((float)mouse.GetPosX(), (float)width);
+	float dy = Math::ClipCoursor((float)mouse.GetPosY(), (float)height);
+
+	return { dx, dy };
+}
+
+BOOL Window::OnKeyPressed(BYTE keyCode) noexcept {
+	return kbd.KeyPressed(keyCode);
 }
 
 LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept {

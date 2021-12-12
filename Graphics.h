@@ -8,6 +8,7 @@
 #include <vector>
 #include <d3dcompiler.h>
 #include <wrl.h>
+#include "Camera.h"
 
 class Graphics {
 	friend class Bindable;
@@ -57,6 +58,10 @@ public:
 	void EndFrame();
 	void BeginFrame(float R, float G, float B) noexcept;
 	void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
+
+	void SetCamera(DirectX::XMMATRIX view) noexcept;
+	DirectX::XMMATRIX GetCamera() const noexcept;
+
 	void SetProjection(DirectX::FXMMATRIX proj) noexcept;
 	DirectX::XMMATRIX GetProjection() const noexcept;
 
@@ -64,6 +69,7 @@ private:
 #ifndef NDEBUG
 	DXGIInfoManager infoManager;
 #endif
+	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX projection;
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;

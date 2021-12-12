@@ -150,6 +150,14 @@ void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG) {
 	GFX_THROW_INFO_ONLY(pImmContext->DrawIndexed(count, 0u, 0u));
 }
 
+void Graphics::SetCamera(DirectX::XMMATRIX view) noexcept {
+	this->view = view;
+}
+
+DirectX::XMMATRIX Graphics::GetCamera() const noexcept {
+	return view;
+}
+
 void Graphics::SetProjection(DirectX::FXMMATRIX proj) noexcept {
 	projection = proj;
 }
@@ -159,175 +167,9 @@ DirectX::XMMATRIX Graphics::GetProjection() const noexcept {
 }
 
 
-/************************* DEBUG ONLY ***************************/
-
-//void Graphics::DrawTestTriangle(float angle, float x, float y) {
-//	namespace wrl = Microsoft::WRL;
-//
-//	HRESULT hr;
-//
-//	Mesh cube = Mesh::Generator::Create(Mesh::Type::Cube);
-//
-//	// Create vertex buffer
-//
-//	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
-//
-//	D3D11_BUFFER_DESC  bd = {
-//		sizeof(vertices),			// ByteWidth
-//		D3D11_USAGE_DEFAULT,		// Usage
-//		D3D11_BIND_VERTEX_BUFFER,	// BindFlags
-//		0u,							// CPUAccessFlags
-//		0u,							// MiscFlags
-//		sizeof(Vertex),				// StructuredByteStride
-//	};
-//
-//	D3D11_SUBRESOURCE_DATA data = {
-//		vertices,	// pSysMem
-//		0u,			// SysMemPitch
-//		0u,			// SysMemSlicePitch
-//	};
-//
-//	GFX_THROW_INFO(pDevice->CreateBuffer(&bd, &data, &pVertexBuffer));
-//
-//	const UINT stride = sizeof(Vertex);
-//	const UINT offset = 0u;
-//
-//	pImmContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
-//
-//	// Create index buffer
-//	const USHORT indices[] = {
-//		0, 2, 1, //face front
-//		0, 3, 2,
-//		2, 3, 4, //face top
-//		2, 4, 5,
-//		1, 2, 5, //face right
-//		1, 5, 6,
-//		0, 7, 4, //face left
-//		0, 4, 3,
-//		5, 4, 7, //face back
-//		5, 7, 6,
-//		0, 6, 7, //face bottom
-//		0, 1, 6
-//	};
-//
-//	wrl::ComPtr<ID3D11Buffer> pIndexBuffer;
-//
-//	D3D11_BUFFER_DESC  ibd = {
-//		sizeof(indices),			// ByteWidth
-//		D3D11_USAGE_DEFAULT,		// Usage
-//		D3D11_BIND_INDEX_BUFFER,	// BindFlags
-//		0u,							// CPUAccessFlags
-//		0u,							// MiscFlags
-//		sizeof(USHORT),				// StructuredByteStride
-//	};
-//
-//	D3D11_SUBRESOURCE_DATA idata = {
-//		indices,	// pSysMem
-//		0u,			// SysMemPitch
-//		0u,			// SysMemSlicePitch
-//	};
-//
-//	GFX_THROW_INFO(pDevice->CreateBuffer(&ibd, &idata, &pIndexBuffer));
-//
-//	pImmContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
-//
-//	// Create pixel shader
-//	wrl::ComPtr<ID3DBlob> pBlob;
-//	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
-//	GFX_THROW_INFO(D3DReadFileToBlob(TEXT("PixelShader.cso"), &pBlob));
-//	GFX_THROW_INFO(pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
-//
-//	pImmContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
-//
-//	// Create vertex shader
-//	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-//	GFX_THROW_INFO(D3DReadFileToBlob(TEXT("VertexShader.cso"), &pBlob));
-//	GFX_THROW_INFO(pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
-//
-//	pImmContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
-//
-//
-//	// create input layout
-//	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
-//	const D3D11_INPUT_ELEMENT_DESC ied[2] = {
-//		D3D11_INPUT_ELEMENT_DESC {
-//			"POSITION",						// SemanticName
-//			0u,								// SemanticIndex
-//			DXGI_FORMAT_R32G32B32_FLOAT,	// Format
-//			0u,								// InputSlot
-//			D3D11_APPEND_ALIGNED_ELEMENT,	// AlignedByteOffset
-//			D3D11_INPUT_PER_VERTEX_DATA,	// InputSlotClass
-//			0u,								// InstanceDataStepRate
-//		},
-//		D3D11_INPUT_ELEMENT_DESC {
-//			"COLOR",						// SemanticName
-//			0u,								// SemanticIndex
-//			DXGI_FORMAT_R8G8B8A8_UNORM,		// Format
-//			0u,								// InputSlot
-//			D3D11_APPEND_ALIGNED_ELEMENT,	// AlignedByteOffset
-//			D3D11_INPUT_PER_VERTEX_DATA,	// InputSlotClass
-//			0u,								// InstanceDataStepRate
-//		}
-//	};
-//
-//	GFX_THROW_INFO(pDevice->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout));
-//	pImmContext->IASetInputLayout(pInputLayout.Get());
-//
-//	// create constant buffer
-//	struct ConstantBuffer {
-//		DirectX::XMMATRIX transform;
-//	};
-//
-//	const ConstantBuffer cb = {
-//		{
-//			Math::Transpose(
-//				Math::Rotation(angle, Axis::Z) *
-//				Math::Rotation(angle * 0.66f, Axis::X) *
-//				Math::Translation(x, y, 8.0f) *
-//				Math::Projection(1.0f, 3.0f / 4.0f, 0.5f, 10.0f)
-//			)
-//		}
-//	};
-//
-//	wrl::ComPtr<ID3D11Buffer> pConstantBuffer;
-//
-//	D3D11_BUFFER_DESC  cbd = {
-//		sizeof(cb),					// ByteWidth
-//		D3D11_USAGE_DYNAMIC,		// Usage
-//		D3D11_BIND_CONSTANT_BUFFER,	// BindFlags
-//		D3D11_CPU_ACCESS_WRITE,		// CPUAccessFlags
-//		0u,							// MiscFlags
-//		sizeof(ConstantBuffer),		// StructuredByteStride
-//	};
-//
-//	D3D11_SUBRESOURCE_DATA cdata = {
-//		&cb,		// pSysMem
-//		0u,			// SysMemPitch
-//		0u,			// SysMemSlicePitch
-//	};
-//
-//	GFX_THROW_INFO(pDevice->CreateBuffer(&cbd, &cdata, &pConstantBuffer));
-//
-//	pImmContext->VSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf()); // bind constant buffer to specific shader
-//
-//	// set primitive topology
-//	pImmContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//
-//	// configure viewport
-//	D3D11_VIEWPORT vp = {
-//		0.0f,	// TopLeftX
-//		0.0f,	// TopLeftY
-//		800.0f, // Width
-//		600.0f, // Width
-//		0.0f,	// MinDepth
-//		1.0f,	// MaxDepth
-//	};
-//	pImmContext->RSSetViewports(1u, &vp);
-//
-//	GFX_THROW_INFO_ONLY(pImmContext->DrawIndexed((UINT)std::size(indices), 0u, 0u));
-//}
-
-/************************* DEBUG ONLY ***************************/
+/****************************************************************/
+/************************* EXCEPTIONS ***************************/
+/****************************************************************/
 
 Graphics::InfoException::InfoException(
 	int line, const char* file,

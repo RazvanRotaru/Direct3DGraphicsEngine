@@ -2,7 +2,7 @@
 #include "Bindable.h"
 #include "GraphicsThrowMacros.h"
 
-extern struct Vertex;
+struct Vertex;
 
 class VertexBuffer : public Bindable {
 public:

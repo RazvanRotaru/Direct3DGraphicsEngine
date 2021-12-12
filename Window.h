@@ -69,6 +69,10 @@ public:
 	void SetTitle(const std::string& title);
 	static std::optional<WPARAM> ProcessMessages();
 	Graphics& GFX();
+
+	Vector2 GetMousePosition() noexcept;
+	BOOL OnKeyPressed(BYTE keyCode) noexcept;
+
 private:
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;

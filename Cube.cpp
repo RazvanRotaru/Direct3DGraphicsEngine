@@ -22,7 +22,7 @@ Cube::Cube(Graphics& gfx) :
 		
 
 		AddStaticBind(std::make_unique<PixelConstantBuffer<Material>>(gfx, mat));
-		AddStaticBind(std::make_unique<Texture>(gfx, Surface::FromFile("Resources\\Textures\\gokuh.jpg")));
+		AddStaticBind(std::make_unique<Texture>(gfx, Surface::FromFile("Resources\\Textures\\10.png")));
 		AddStaticBind(std::make_unique<Sampler>(gfx));
 
 		AddStaticBind(std::make_unique<InputLayout>(gfx, mesh.GetLayout(), pVShaderBC));
@@ -53,8 +53,7 @@ DirectX::XMMATRIX Cube::GetTransformXM() const noexcept {
 
 	return DirectX::XMLoadFloat3x3(&mt) *
 		Math::Rotation(yaw, Axis::Y) *
-		Math::Rotation(pitch, Axis::X) *
-		Math::Translation(0.0f, 0.0f, 5.0f);
+		Math::Rotation(pitch, Axis::X);
 }
 
 void Cube::Update(float dx, float dy) noexcept {

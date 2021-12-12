@@ -32,6 +32,13 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> Mesh::layout =
 };
 
 
+Mesh::Mesh(Mesh::Type type, Material mat) noexcept {
+	const auto mesh = Mesh::Generator::Create(type);
+	this->vertices = mesh.vertices;
+	this->indices = mesh.indices;
+	this->material = mat;
+}
+ 
 Mesh::Mesh(std::vector<Vertex> vertices,
 		   std::vector<Index> indices,
 		   Material material) noexcept

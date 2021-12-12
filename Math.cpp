@@ -82,8 +82,24 @@ DirectX::XMMATRIX Math::Rotation(float angle, Axis axis) {
 	throw "Unknown axis";
 }
 
+DirectX::XMMATRIX Math::Rotation(float roll, float pitch, float yaw) {
+	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+}
+
+DirectX::XMMATRIX Math::Rotation(Vector3 eulerAngles) {
+	DirectX::XMVECTOR rotVec{};
+	DirectX::XMStoreFloat3(&eulerAngles, rotVec);
+	return DirectX::XMMatrixRotationRollPitchYawFromVector(rotVec);
+}
+
 DirectX::XMMATRIX Math::Translation(float x, float y, float z) {
 	return DirectX::XMMatrixTranslation(x, y, z);
+}
+
+DirectX::XMMATRIX Math::Translation(Vector3 position) {
+	DirectX::XMVECTOR tVec{};
+	DirectX::XMStoreFloat3(&position, tVec);
+	return DirectX::XMMatrixTranslationFromVector(tVec);
 }
 
 DirectX::XMMATRIX Math::Scaling(float x, float y, float z) {
@@ -92,6 +108,10 @@ DirectX::XMMATRIX Math::Scaling(float x, float y, float z) {
 
 DirectX::XMMATRIX Math::Projection(float fov, float aspectRatio, float zNear, float zFar) {
 	return DirectX::XMMatrixPerspectiveFovLH(fov, aspectRatio, zNear, zFar);
+}
+
+DirectX::XMVECTOR Math::Transform(DirectX::XMVECTOR vec, DirectX::XMMATRIX mat) {
+	return DirectX::XMVector3Transform(vec, mat);
 }
 
 float Math::ClipCoursor(float pos, float wndSize) {

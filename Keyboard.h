@@ -45,7 +45,7 @@ private:
 	static constexpr unsigned int nKeys = 256u;
 	bool autorepeatEnabled = false;
 	std::bitset<nKeys> keyStates;
-//public:
+public:
 	IODevice::Buffer<Event> keyBuffer;
 	IODevice::Buffer<char> charBuffer;
 };

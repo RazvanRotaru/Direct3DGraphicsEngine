@@ -22,11 +22,11 @@ class Mesh {
 public:
 	enum class Type {
 		Cube,
-		Sphere
+		Sphere,
+		// ...
 	};
 
 	class Generator {
-		// TODO (Add Factory)
 	public:
 		static Mesh Create(Type type);
 	private:
@@ -34,7 +34,7 @@ public:
 	};
 public:
 	Mesh() noexcept = default;
-	Mesh(Type) noexcept;
+	Mesh(Type, Material = {}) noexcept;
 	Mesh(std::vector<Vertex>, std::vector<Index>, Material = {}) noexcept;
 
 	std::vector<Vertex> GetVertices() noexcept;
