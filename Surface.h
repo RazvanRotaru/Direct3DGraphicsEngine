@@ -82,17 +82,21 @@ public:
 	Surface(unsigned int width, unsigned int height) noexcept;
 	Surface(Surface&& source) noexcept;
 	Surface(Surface&) = delete;
-	Surface& operator=(Surface&& donor) noexcept;
 	Surface& operator=(const Surface&) = delete;
+	Surface& operator=(Surface&& donor) noexcept;
 	~Surface();
+
 	void Clear(Color fillValue) noexcept;
 	void PutPixel(unsigned int x, unsigned int y, Color c) noexcept(!IS_DEBUG);
 	Color GetPixel(unsigned int x, unsigned int y) const noexcept(!IS_DEBUG);
+	
 	unsigned int GetWidth() const noexcept;
 	unsigned int GetHeight() const noexcept;
+	
 	Color* GetBufferPtr() noexcept;
 	const Color* GetBufferPtr() const noexcept;
 	const Color* GetBufferPtrConst() const noexcept;
+	
 	static Surface FromFile(const std::string& name);
 	void Save(const std::string& filename) const;
 	void Copy(const Surface& src) noexcept(!IS_DEBUG);

@@ -8,7 +8,7 @@ TransformCBuf::TransformCBuf(Graphics& gfx, const Drawable& parent, UINT slot)
 }
 
 void TransformCBuf::Bind(Graphics& gfx) noexcept {
-	/*const auto modelView = parent.GetTransformXM() * gfx.GetCamera();
+	const auto modelView = parent.GetTransformXM(); // TODO: add camera
 	const Transforms tf =
 	{
 		DirectX::XMMatrixTranspose(modelView),
@@ -17,7 +17,7 @@ void TransformCBuf::Bind(Graphics& gfx) noexcept {
 			gfx.GetProjection()
 		)
 	};
-	pVcbuf->Update(gfx, tf);*/
+	pVcbuf->Update(gfx, tf);
 	pVcbuf->Bind(gfx);
 }
 

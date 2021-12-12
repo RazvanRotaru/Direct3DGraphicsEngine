@@ -1,6 +1,6 @@
 #pragma once
 #include "Graphics.h"
-#include <DirectXMath.h>
+#include "Math.h"
 #include <memory>
 
 class Bindable;
@@ -18,6 +18,7 @@ public:
 
 	virtual DirectX::XMMATRIX GetTransformXM() const noexcept = 0;
 	virtual void Update(float dt) noexcept = 0;
+	virtual void Update(float dx, float dy) noexcept = 0;
 protected:
 	template<class T>
 	T* QueryBindable() noexcept {

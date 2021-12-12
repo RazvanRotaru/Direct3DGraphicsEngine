@@ -3,6 +3,7 @@
 #include "EngineException.h"
 #include "DXGIInfoManager.h"
 #include "GraphicsThrowMacros.h"
+#include "Math.h"
 #include <d3d11.h>
 #include <vector>
 #include <d3dcompiler.h>
@@ -54,21 +55,17 @@ public:
 	~Graphics() = default;
 
 	void EndFrame();
-
-	// DEBUG only
-	void ClearBuffer(float R, float G, float B) noexcept {
-		const float color[] = { R,G,B,1.0f };
-		pImmContext->ClearRenderTargetView(pTarget.Get(), color);
-		pImmContext->ClearDepthStencilView(pDSView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0.0f);
-	}
-
-	void DrawTestTriangle(float angle, float x, float y);
-	void DrawIndexed(UINT count);
+	void BeginFrame(float R, float G, float B) noexcept;
+	void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
+	void SetProjection(DirectX::FXMMATRIX proj) noexcept;
+	DirectX::XMMATRIX GetProjection() const noexcept;
 
 private:
 #ifndef NDEBUG
 	DXGIInfoManager infoManager;
 #endif
+	DirectX::XMMATRIX projection;
+private:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmContext;

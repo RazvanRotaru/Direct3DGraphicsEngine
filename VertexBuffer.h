@@ -1,7 +1,8 @@
 #pragma once
 #include "Bindable.h"
-#include "Mesh.h"
 #include "GraphicsThrowMacros.h"
+
+extern struct Vertex;
 
 class VertexBuffer : public Bindable {
 public:

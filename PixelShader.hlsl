@@ -1,4 +1,12 @@
-float4 main(float3 color : COLOR) : SV_TARGET
+cbuffer Material {
+	float3 color;
+	float shininess;
+};
+
+//Texture2D tex;
+//SamplerState splr;
+
+float4 main(float3 pos : POSITION, float3 normal : NORMAL, float2 uv : UV) : SV_Target
 {
-	return float4(color, 1.0f);
+	return float4(normalize(color + normal), 1.0f);
 }

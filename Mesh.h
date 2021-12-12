@@ -7,35 +7,30 @@
 typedef USHORT Index;
 typedef Vector2 UV;
 
-struct RGB {
-	USHORT r;
-	USHORT g;
-	USHORT b;
-};
-
 struct Vertex {
 	Vector3 position;
-	RGB color;
 	Vector3 normal;
 	UV tex_coord;
 };
 
 struct Material {
-	Vector3 ambient = { 1.0f, 1.0f, 1.0f };
-	Vector3 diffuse = { 1.0f, 1.0f, 1.0f };
-	Vector3 specular;
+	Vector3 color = { 1.0f, 1.0f, 0 };
 	float shininess;
 };
 
 class Mesh {
 public:
 	enum class Type {
-		Box,
+		Cube,
 		Sphere
 	};
 
 	class Generator {
 		// TODO (Add Factory)
+	public:
+		static Mesh Create(Type type);
+	private:
+		static Mesh CreateCube();
 	};
 public:
 	Mesh() noexcept = default;
@@ -45,6 +40,7 @@ public:
 	std::vector<Vertex> GetVertices() noexcept;
 	std::vector<Index> GetIndices() noexcept;
 	Material GetMaterial() noexcept;
+	static std::vector<D3D11_INPUT_ELEMENT_DESC> GetLayout() noexcept;
 
 private:
 	std::vector<Vertex> vertices;
