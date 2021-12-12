@@ -5,6 +5,7 @@
 #include "GraphicsThrowMacros.h"
 #include <d3d11.h>
 #include <vector>
+#include <d3dcompiler.h>
 #include <wrl.h>
 
 class Graphics {
@@ -62,6 +63,7 @@ public:
 	}
 
 	void DrawTestTriangle(float angle, float x, float y);
+	void DrawIndexed(UINT count);
 
 private:
 #ifndef NDEBUG

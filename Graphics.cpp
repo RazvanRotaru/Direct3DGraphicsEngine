@@ -2,8 +2,6 @@
 #include "Math.h"
 #include "dxerr.h"
 #include <sstream>
-#include <d3dcompiler.h>
-#include <DirectXMath.h>
 
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
@@ -107,6 +105,10 @@ Graphics::Graphics(HWND hWnd) {
 	GFX_THROW_INFO(pDevice->CreateDepthStencilView(pDepthStencil.Get(), &ddsv, &pDSView));
 
 	pImmContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSView.Get());
+}
+
+void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG) {
+	GFX_THROW_INFO_ONLY(pImmContext->DrawIndexed(count, 0u, 0u));
 }
 
 void Graphics::EndFrame() {
@@ -244,7 +246,7 @@ void Graphics::DrawTestTriangle(float angle, float x, float y) {
 		D3D11_INPUT_ELEMENT_DESC {
 			"POSITION",						// SemanticName
 			0u,								// SemanticIndex
-			DXGI_FORMAT_R32G32B32_FLOAT,		// Format
+			DXGI_FORMAT_R32G32B32_FLOAT,	// Format
 			0u,								// InputSlot
 			D3D11_APPEND_ALIGNED_ELEMENT,	// AlignedByteOffset
 			D3D11_INPUT_PER_VERTEX_DATA,	// InputSlotClass

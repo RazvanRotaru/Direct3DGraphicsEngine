@@ -16,7 +16,7 @@
 #endif
 
 #ifndef NDEBUG
-#define INIT_INFOMNGR(gfx) HRESULT hr;
+#define INIT_INFOMNGR(gfx) HRESULT hr; DXGIInfoManager& infoManager = GetInfoManager((gfx));
 #else
-#define INIT_INFOMNGR(gfx) HRESULT; DXGInfoManager& infoManager = GetInfoManager((gfx));
+#define INIT_INFOMNGR(gfx) HRESULT hr;
 #endif
