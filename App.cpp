@@ -1,9 +1,16 @@
 #include "App.h"
 #include "Math.h"
+#include "GDIPlusManager.h"
+#include "Surface.h"
 #include <sstream>
 #include <iomanip>
 
-App::App() : wnd(800, 600, TEXT("MG3D_Engine")) {}
+GDIPlusManager gdipm;
+
+App::App() : wnd(800, 600, TEXT("MG3D_Engine")) {
+	// TEST GDI+
+	const auto s = Surface::FromFile("Resources\\Textures\\gokuh.jpg");
+}
 
 HRESULT App::Run() {
 	while (TRUE) {
