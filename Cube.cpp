@@ -11,18 +11,19 @@ Cube::Cube(Graphics& gfx) :
 			1
 		};
 		Mesh mesh = Mesh::Generator::Create(Mesh::Type::Cube);
+		
 		AddBind(std::make_unique<VertexBuffer>(gfx, mesh.GetVertices()));
-
-		// might need to call AddIndexBuffer
 		AddBind(std::make_unique<IndexBuffer>(gfx, mesh.GetIndices()));
 
+		AddStaticBind(std::make_unique<PixelShader>(gfx, TEXT("PixelShader.cso")));
 		auto pVShader = std::make_unique<VertexShader>(gfx, TEXT("VertexShader.cso"));
 		auto pVShaderBC = pVShader->GetBytecode();
-
 		AddStaticBind(std::move(pVShader));
-		AddStaticBind(std::make_unique<PixelShader>(gfx, TEXT("PixelShader.cso")));
+		
 
 		AddStaticBind(std::make_unique<PixelConstantBuffer<Material>>(gfx, mat));
+		AddStaticBind(std::make_unique<Texture>(gfx, Surface::FromFile("Resources\\Textures\\gokuh.jpg")));
+		AddStaticBind(std::make_unique<Sampler>(gfx));
 
 		AddStaticBind(std::make_unique<InputLayout>(gfx, mesh.GetLayout(), pVShaderBC));
 		AddStaticBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
