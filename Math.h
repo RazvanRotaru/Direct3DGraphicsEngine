@@ -1,9 +1,14 @@
 #pragma once
 #include <DirectXMath.h>
 
-#define ModelMatrix DirectX::XMFLOAT3X3
-#define ViewMatrix DirectX::XMFLOAT3X3
-#define ProjMatrix DirectX::XMFLOAT3X3
+typedef DirectX::XMFLOAT3X3 ModelMatrix;
+typedef DirectX::XMFLOAT3X3 ViewMatrix;
+typedef DirectX::XMFLOAT3X3 ProjMatrix;
+
+typedef DirectX::XMFLOAT4 Vector4;
+typedef DirectX::XMFLOAT3 Vector3;
+typedef DirectX::XMFLOAT2 Vector2;
+
 
 enum class Axis {
 	X,
