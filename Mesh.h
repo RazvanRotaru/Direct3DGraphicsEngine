@@ -14,10 +14,15 @@ struct Vertex {
 };
 
 struct Material {
-	Vector3 color = { 1.0f, 1.0f, 0 };
+	alignas(16) Vector3 color = { 1.0f, 1.0f, 0 };
 	float shininess;
+	float kd;
+	float ks;
+	float padding;
 };
 
+
+// TODO: this should be drawable, not the Actor
 class Mesh {
 public:
 	enum class Type {
@@ -33,7 +38,7 @@ public:
 		static Mesh CreateCube();
 	};
 public:
-	Mesh() noexcept = default;
+	Mesh() = default;
 	Mesh(Type, Material = {}) noexcept;
 	Mesh(std::vector<Vertex>, std::vector<Index>, Material = {}) noexcept;
 

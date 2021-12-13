@@ -1,5 +1,5 @@
 cbuffer CBuf {
-	matrix MV;
+	matrix M;
 	matrix MVP;
 };
 
@@ -12,8 +12,8 @@ struct VSOut {
 
 VSOut main(float3 pos : POSITION, float3 n : NORMAL, float2 uv : UV) {
 	VSOut vso;
-	vso.worldPos = (float3)mul(float4(pos, 1.0f), MV);
-	//vso.normal = mul(n, (float3x3)MV);
+	vso.worldPos = (float3)mul(float4(pos, 1.0f), M);
+	//vso.normal = mul(n, (float3x3)M);
 	vso.normal = abs(n);
 	vso.pos = mul(float4(pos, 1.0f), MVP);
 	vso.uv = uv;

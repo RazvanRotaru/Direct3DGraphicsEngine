@@ -61,6 +61,9 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> Mesh::GetLayout() noexcept {
 	return layout;
 }
 
+/*******************************************************************/
+/**************************** GENERATOR ****************************/
+/*******************************************************************/
 Mesh Mesh::Generator::Create(Type type) {
 	switch (type) {
 	case Mesh::Type::Cube:

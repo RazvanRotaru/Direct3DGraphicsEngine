@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "Timer.h"
+#include "PointLight.h"
 
 class App {
 public:
@@ -16,5 +17,10 @@ private:
 	Camera camera;
 	Timer timer;
 	std::vector<std::unique_ptr<class Drawable>> drawables;
+
+	// TEst
+	PointLight* pointLight;
+	class Actor* actor;
+	class Mesh* mesh;
 };
 

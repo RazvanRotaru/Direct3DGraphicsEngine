@@ -1,6 +1,8 @@
 #pragma once
 #include "Math.h"
+#include "Actor.h"
 
+// inherit from Actor
 class Camera {
 public:
 	Camera() noexcept;

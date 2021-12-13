@@ -3,6 +3,8 @@
 #include "GDIPlusManager.h"
 #include "Surface.h"
 #include "Cube.h"
+#include "Actor.h"
+#include "Mesh.h"
 #include <sstream>
 #include <iomanip>
 
@@ -15,6 +17,11 @@ App::App() : wnd(800, 600, TEXT("MG3D_Engine")) {
 
 	// TODO store width and height in window
 	wnd.GFX().SetProjection(Math::Projection(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
+	actor = new Actor(wnd.GFX(), nullptr);
+	mesh = new Mesh(Mesh::Type::Cube);
+	actor->SetMesh(mesh);
+
+	pointLight = new PointLight(wnd.GFX());
 }
 
 App::~App() {}
@@ -41,16 +48,25 @@ void App::Tick() {
 
 	const auto mousePosition = wnd.GetMousePosition();
 
-	wnd.GFX().BeginFrame(c, 1.0f, 1.0f);
+	wnd.GFX().BeginFrame(0.0f, 0.0f, 0.0f);
 	wnd.GFX().SetCamera(camera.GetMatrix());
 
 	UpdateCamera(dt);
 
+	actor->Tick(dt);
+	pointLight->Bind();
+
 	for (auto& d : drawables) {
+		if (typeid(d) == typeid(Actor)) {
+			continue;
+		}
+
 		d->Update(wnd.kbd.KeyPressed(VK_SPACE) ? 0.0f : mousePosition.x, 
 					wnd.kbd.KeyPressed(VK_SPACE) ? 0.0f : mousePosition.y);
 		d->Draw(wnd.GFX());
 	}
+
+	pointLight->Draw();
 
 	wnd.GFX().EndFrame();
 }
