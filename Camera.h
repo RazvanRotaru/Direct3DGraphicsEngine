@@ -14,7 +14,8 @@ public:
 	//void Bind() noexcept;
 	void Move(Vector3 dir) noexcept;
 	void Rotate(float dx, float dy) noexcept;
-private:
+
+	void SetViewport() const noexcept;
 	static constexpr float moveSpeed = 10.0f;
 	static constexpr float rotationSpeed = 5e-1f;
 };

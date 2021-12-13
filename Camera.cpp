@@ -1,7 +1,9 @@
 #include "Camera.h"
 #include "Transform.h"
+#include "CameraRenderer.h"
 
 Camera::Camera(Graphics& gfx) noexcept : Actor(gfx) {
+	renderer = new CameraRenderer(this);
 }
 
 void Camera::Move(Vector3 dir) noexcept {
@@ -24,6 +26,10 @@ void Camera::Rotate(float dx, float dy) noexcept {
 	pitch = Math::Clamp(pitch + dy * rotationSpeed, -Math::PI * 0.5f, Math::PI * 0.5f);
 
 	transform->SetRotation(Vector3(0.0f, pitch, yaw));
+}
+
+void Camera::SetViewport() const noexcept {
+	dynamic_cast<CameraRenderer*>(renderer)->SetViewport();
 }
 
 DirectX::XMMATRIX Camera::GetViewMatrix() const noexcept {

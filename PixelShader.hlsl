@@ -31,7 +31,7 @@ cbuffer Camera
 float4 main(float3 pos : POSITION, float3 normal : NORMAL, float2 uv : UV) : SV_Target
 {
 	float4 tex_color = tex.Sample(splr, uv);
-    return float4(saturate(tex_color.xyz * light_dir), 1.0f);
+    return float4(saturate(tex_color.xyz * light_dir * cam_pos), 1.0f);
     //return tex_color;
     //return float4(saturate(tex_color.xyz * specular_color), 1.0f);
 

@@ -108,9 +108,8 @@ void App::UpdateCamera(float delta) noexcept {
 
 	if (wnd.mouse.ButtonPressed(Mouse::Button::Right)) {
 		const auto mousePosition = wnd.GetMouseDelta();
-		std::ostringstream oss;
-		oss << "Mouse position: (" << mousePosition.x << ", " << mousePosition.y << ")";
-		wnd.SetTitle(oss.str());
 		camera.Rotate(mousePosition.x, mousePosition.y);
 	}
+
+	camera.SetViewport();
 }
