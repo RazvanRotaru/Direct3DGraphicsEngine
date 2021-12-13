@@ -8,9 +8,11 @@
 #include <sstream>
 #include <iomanip>
 
+#include "Transform.h"
+
 GDIPlusManager gdipm;
 
-App::App() : wnd(800, 600, TEXT("MG3D_Engine")) {
+App::App() : wnd(800, 600, TEXT("MG3D_Engine")), camera(wnd.GFX()) {
 	// TEST GDI+
 	const auto s = Surface::FromFile("Resources\\Textures\\gokuh.jpg");
 	//drawables.push_back(std::make_unique<Cube>(wnd.GFX()));
@@ -25,6 +27,8 @@ App::App() : wnd(800, 600, TEXT("MG3D_Engine")) {
 	//drawables.push_back((Drawable*)(actor->GetRenderer()));
 	actors.push_back(std::unique_ptr<Actor>(actor));
 	pointLight = new PointLight(wnd.GFX());
+
+	camera.GetTransform()->Move(Vector3(0.0f, 0.0f, -20.0f));
 }
 
 App::~App() {}
@@ -47,6 +51,9 @@ void App::Tick() {
 	std::ostringstream oss;
 	//oss << "Frame time: " << std::setprecision(1) << std::fixed << dt << "s";
 	//oss << "Mouse position: (" << wnd.GetMouseDelta().x << ", " << wnd.GetMouseDelta().y << ")";
+	oss << "Camera position: (" << camera.GetTransform()->GetPosition().x << ", "
+		<< camera.GetTransform()->GetPosition().y << ", "
+		<< camera.GetTransform()->GetPosition().z << ")";
 	wnd.SetTitle(oss.str());
 
 	const float c = sin(timer.Peek()) * 0.5f;
@@ -54,7 +61,7 @@ void App::Tick() {
 	const auto mousePosition = wnd.GetMousePosition();
 
 	wnd.GFX().BeginFrame(0.0f, 0.0f, 0.0f);
-	wnd.GFX().SetCamera(camera.GetMatrix());
+	wnd.GFX().SetCamera(camera.GetViewMatrix());
 
 	UpdateCamera(dt);
 
@@ -99,9 +106,11 @@ void App::UpdateCamera(float delta) noexcept {
 		camera.Move({ 0.0f, delta, 0.0f });
 	}
 
-	const auto mousePosition = wnd.GetMouseDelta();
-	std::ostringstream oss;
-	oss << "Mouse position: (" << mousePosition.x << ", " << mousePosition.y << ")";
-	wnd.SetTitle(oss.str());
-	camera.Rotate(mousePosition.x, mousePosition.y);
+	if (wnd.mouse.ButtonPressed(Mouse::Button::Right)) {
+		const auto mousePosition = wnd.GetMouseDelta();
+		std::ostringstream oss;
+		oss << "Mouse position: (" << mousePosition.x << ", " << mousePosition.y << ")";
+		wnd.SetTitle(oss.str());
+		camera.Rotate(mousePosition.x, mousePosition.y);
+	}
 }

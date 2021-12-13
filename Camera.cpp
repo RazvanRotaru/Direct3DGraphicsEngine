@@ -1,46 +1,35 @@
 #include "Camera.h"
 #include "Transform.h"
 
-Camera::Camera() noexcept {
-	Reset();
+Camera::Camera(Graphics& gfx) noexcept : Actor(gfx) {
 }
 
-Camera& Camera::operator=(const Camera& other) {
-	this->position = other.position;
-
-	this->yaw = other.yaw;
-	this->pitch = other.pitch;
-
-	return *this;
-}
-
-void Camera::Reset() noexcept {
-	position = { 0.0f, 0.0f, -20.0f };
-	yaw = 0.0f;
-	pitch = 0.0f;
-}
-
-void Camera::Move(Vector3 to) noexcept {
+void Camera::Move(Vector3 dir) noexcept {
 	// compute global movement direction
-	DirectX::XMStoreFloat3(&to, Math::Transform(
-		DirectX::XMLoadFloat3(&to),
+	float pitch = transform->GetRotation().y;
+	float yaw = transform->GetRotation().z;
+	DirectX::XMStoreFloat3(&dir, Math::Transform(
+		DirectX::XMLoadFloat3(&dir),
 		Math::Rotation(0.0f, pitch, yaw) *
 		Math::Scaling(moveSpeed, moveSpeed, moveSpeed)
 	));
 
-	position = {
-		position.x + to.x,
-		position.y + to.y,
-		position.z + to.z
-	};
+	transform->Move(dir);
 }
 
 void Camera::Rotate(float dx, float dy) noexcept {
+	float pitch = transform->GetRotation().y;
+	float yaw = transform->GetRotation().z;
 	yaw = Math::WrapAngle(yaw + dx * rotationSpeed);
 	pitch = Math::Clamp(pitch + dy * rotationSpeed, -Math::PI * 0.5f, Math::PI * 0.5f);
+
+	transform->SetRotation(Vector3(0.0f, pitch, yaw));
 }
 
-DirectX::XMMATRIX Camera::GetMatrix() const noexcept {
-	return Math::Translation(-position.x, -position.y, -position.z)
-		* Math::Rotation(0.0f, -pitch, -yaw);
+DirectX::XMMATRIX Camera::GetViewMatrix() const noexcept {
+	return Math::Translation(
+		-transform->GetPosition().x,
+		-transform->GetPosition().y,
+		-transform->GetPosition().z)
+		* Math::Rotation(0.0f, -transform->GetRotation().y, -transform->GetRotation().z);
 }
