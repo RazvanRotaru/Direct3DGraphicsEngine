@@ -34,14 +34,27 @@ void Transform::Move(Vector3 direction) noexcept {
 
 void Transform::Rotate(Vector3 rotation) noexcept {
 	this->rotation = {
-			this->rotation.x + rotation.x,
-			this->rotation.y + rotation.y,
-			this->rotation.z + rotation.z
+		this->rotation.x + rotation.x,
+		this->rotation.y + rotation.y,
+		this->rotation.z + rotation.z
 	};
 
 	for (Transform* child : children) {
 		child->Rotate(rotation);
 	}
+}
+
+void Transform::Scale(Vector3 scale) noexcept {
+	this->scale = {
+		this->scale.x + scale.x,
+		this->scale.y + scale.y,
+		this->scale.z + scale.z
+	};
+
+	for (Transform* child : children) {
+		child->Scale(scale);
+	}
+
 }
 
 void Transform::Reset() noexcept {
@@ -50,27 +63,33 @@ void Transform::Reset() noexcept {
 }
 
 void Transform::SetPosition(Vector3 position) noexcept {
-	this->position = {
-		this->position.x + position.x,
-		this->position.y + position.y,
-		this->position.z + position.z
+	Vector3 deltaPosition = {
+		position.x - this->position.x,
+		position.y - this->position.y,
+		position.z - this->position.z
 	};
 
-	for (Transform* child : children) {
-		child->SetPosition(position);
-	}
+	Move(deltaPosition);
 }
 
 void Transform::SetRotation(Vector3 rotation) noexcept {
-	this->rotation = {
-				this->rotation.x + rotation.x,
-				this->rotation.y + rotation.y,
-				this->rotation.z + rotation.z
+	Vector3 deltaRotation = {
+		rotation.x - this->rotation.x,
+		rotation.y - this->rotation.y,
+		rotation.z - this->rotation.z
 	};
 
-	for (Transform* child : children) {
-		child->SetRotation(rotation);
-	}
+	Rotate(deltaRotation);
+}
+
+void Transform::SetScale(Vector3 scale) noexcept {
+	Vector3 deltaScale = {
+		scale.x - this->scale.x,
+		scale.y - this->scale.y,
+		scale.z - this->scale.z
+	};
+
+	Scale(deltaScale);
 }
 
 Vector3 Transform::GetPosition() const noexcept {
@@ -81,7 +100,16 @@ Vector3 Transform::GetRotation() const noexcept {
 	return rotation;
 }
 
+Vector3 Transform::GetScale() const noexcept
+{
+	return scale;
+}
+
 DirectX::XMMATRIX Transform::GetModelMatrix() noexcept {
+	// if parent exists add its rotation and translation
+	if (parent != nullptr) {
+		return parent->GetModelMatrix() * Math::Translation(position) * Math::Rotation(rotation);
+	}
 	return Math::Translation(position) * Math::Rotation(rotation);
 }
 

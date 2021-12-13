@@ -71,6 +71,7 @@ public:
 	Graphics& GFX();
 
 	Vector2 GetMousePosition() noexcept;
+	Vector2 GetMouseDelta() const noexcept;
 	BOOL OnKeyPressed(BYTE keyCode) noexcept;
 
 private:

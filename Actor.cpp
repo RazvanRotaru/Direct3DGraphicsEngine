@@ -29,12 +29,25 @@ void Actor::Start() {
 }
 
 void Actor::Tick(float dt) {
+	if (renderer != nullptr) {
+		renderer->Draw(*world);
+	}
 }
 
 void Actor::SetMesh(Mesh* const& mesh) {
 	this->mesh = mesh;
+	renderer->SetMesh(mesh);
 }
 
 Transform* Actor::GetTransform() const noexcept {
 	return transform;
+}
+
+Renderer*& Actor::GetRenderer() noexcept
+{
+	return renderer;
+}
+
+Graphics*& Actor::GetWorld() noexcept {
+	return world;
 }

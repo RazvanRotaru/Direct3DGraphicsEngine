@@ -13,7 +13,7 @@ GDIPlusManager gdipm;
 App::App() : wnd(800, 600, TEXT("MG3D_Engine")) {
 	// TEST GDI+
 	const auto s = Surface::FromFile("Resources\\Textures\\gokuh.jpg");
-	drawables.push_back(std::make_unique<Cube>(wnd.GFX()));
+	//drawables.push_back(std::make_unique<Cube>(wnd.GFX()));
 
 	// TODO store width and height in window
 	wnd.GFX().SetProjection(Math::Projection(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
@@ -21,6 +21,9 @@ App::App() : wnd(800, 600, TEXT("MG3D_Engine")) {
 	mesh = new Mesh(Mesh::Type::Cube);
 	actor->SetMesh(mesh);
 
+	// TODO use smart pointers
+	//drawables.push_back((Drawable*)(actor->GetRenderer()));
+	actors.push_back(std::unique_ptr<Actor>(actor));
 	pointLight = new PointLight(wnd.GFX());
 }
 
@@ -29,6 +32,8 @@ App::~App() {}
 
 HRESULT App::Run() {
 	while (TRUE) {
+		// TODO: make it nicer
+		wnd.mouse.OnNewFrame();
 		if (const auto errCode = Window::ProcessMessages()) {
 			return static_cast<HRESULT>(*errCode);
 		}
@@ -41,7 +46,7 @@ void App::Tick() {
 	const float dt = timer.Mark();
 	std::ostringstream oss;
 	//oss << "Frame time: " << std::setprecision(1) << std::fixed << dt << "s";
-	oss << "Mouse position: (" << wnd.mouse.GetPosX() << ", " << wnd.mouse.GetPosY() << ")";
+	//oss << "Mouse position: (" << wnd.GetMouseDelta().x << ", " << wnd.GetMouseDelta().y << ")";
 	wnd.SetTitle(oss.str());
 
 	const float c = sin(timer.Peek()) * 0.5f;
@@ -53,17 +58,20 @@ void App::Tick() {
 
 	UpdateCamera(dt);
 
-	actor->Tick(dt);
 	pointLight->Bind();
 
-	for (auto& d : drawables) {
-		if (typeid(d) == typeid(Actor)) {
-			continue;
-		}
+	//for (auto& d : drawables) {
+	//	if (typeid(d) == typeid(Actor)) {
+	//		continue;
+	//	}
 
-		d->Update(wnd.kbd.KeyPressed(VK_SPACE) ? 0.0f : mousePosition.x, 
-					wnd.kbd.KeyPressed(VK_SPACE) ? 0.0f : mousePosition.y);
-		d->Draw(wnd.GFX());
+	//	d->Update(wnd.kbd.KeyPressed(VK_SPACE) ? 0.0f : mousePosition.x, 
+	//				wnd.kbd.KeyPressed(VK_SPACE) ? 0.0f : mousePosition.y);
+	//	d->Draw(wnd.GFX());
+	//}
+
+	for (auto& actor : actors) {
+		actor->Tick(dt);
 	}
 
 	pointLight->Draw();
@@ -91,6 +99,9 @@ void App::UpdateCamera(float delta) noexcept {
 		camera.Move({ 0.0f, delta, 0.0f });
 	}
 
-	const auto mousePosition = wnd.GetMousePosition();
+	const auto mousePosition = wnd.GetMouseDelta();
+	std::ostringstream oss;
+	oss << "Mouse position: (" << mousePosition.x << ", " << mousePosition.y << ")";
+	wnd.SetTitle(oss.str());
 	camera.Rotate(mousePosition.x, mousePosition.y);
 }

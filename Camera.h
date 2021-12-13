@@ -13,6 +13,8 @@ public:
 	void Reset() noexcept;
 	DirectX::XMMATRIX GetMatrix() const noexcept;
 	
+	//void Bind() noexcept;
+
 	void Move(Vector3 to) noexcept;
 	void Rotate(float dx, float dy) noexcept;
 private:
@@ -21,6 +23,14 @@ private:
 	float pitch;
 
 	static constexpr float moveSpeed = 10.0f;
-	static constexpr float rotationSpeed = 4e-3f;
+	static constexpr float rotationSpeed = 5e-1f;
+//private:
+//	struct CameraCbuf {
+//		Vector3 pos;
+//		float padding;
+//	};
+//	
+//	mutable CameraCbuf cbData;
+//	mutable PixelConstantBuffer<CameraCbuf> cbuf;
 };
 

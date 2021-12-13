@@ -2,11 +2,9 @@
 class Graphics;
 class Transform;
 class Mesh;
+class Renderer;
 
-
-// Remove Drawabel, make mesh drawable
 class Actor {
-	friend class Renderer;
 public:
 	Actor(Graphics& gfx, Transform* const& parentTransform = nullptr) noexcept;
 	~Actor();
@@ -17,6 +15,8 @@ public:
 	void SetMesh(Mesh* const& mesh);
 
 	Transform* GetTransform() const noexcept;
+	Renderer*& GetRenderer() noexcept;
+	Graphics*& GetWorld() noexcept;
 protected:
 	Transform* transform = nullptr;
 	Mesh* mesh = nullptr;

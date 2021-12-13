@@ -44,11 +44,13 @@ public:
 	Mouse& operator=(const Mouse&) = delete;
 	
 	std::pair<int, int> GetPos() const noexcept;
+	std::pair<int, int> GetMouseDelta() const noexcept;
 	int GetPosX() const noexcept;
 	int GetPosY() const noexcept;
 	
 	bool InWindow() const noexcept;
 	bool ButtonPressed(Button btn) const noexcept;
+	void OnNewFrame() noexcept;
 
 	void Clear() noexcept;
 private:
@@ -66,6 +68,7 @@ private:
 	bool isInWindow = false;
 	int wheelDeltaCarry = 0;
 	int x = 0, y = 0;
+	mutable std::pair<int, int> prevPos = {0, 0};
 public:
 	IODevice::Buffer<Event> buffer;
 };

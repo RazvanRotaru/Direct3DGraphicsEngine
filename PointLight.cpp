@@ -4,36 +4,20 @@
 #include "Math.h"
 #include "Transform.h"
 #include "BindableBase.h"
+#include "LightSource.h"
 
 PointLight::PointLight(Graphics& gfx)
-	: Actor(gfx), cbuf(gfx) {
+	: Actor(gfx) {
+	// TODO sync transform with lightsource material properties
 	Reset();
+	renderer = new LightSource(this);
 }
 
 void PointLight::Reset() noexcept {
-	cbData = {
-		{ 0.0f,7.0f,14.0f },
-		{ 0.05f,0.05f,0.05f },
-		{ 1.0f,1.0f,1.0f },
-		359.0f,
-		1.0f,
-		0.045f,
-		0.0075f,
-	};
-}
-
-void PointLight::Draw() const noexcept(!IS_DEBUG) {
-	//transform->SetPos(cbData.pos);
-	//mesh.Draw(gfx);
-	transform->SetPosition(cbData.pos);
 }
 
 void PointLight::Bind() const noexcept {
-	cbuf.Update(*world, cbData);
-	cbuf.Bind(*world);
-}
-
-void PointLight::Tick(float dt) {
+	dynamic_cast<LightSource*>(renderer)->CastLight();
 }
 
 //void PointLight::LoadBuffers()

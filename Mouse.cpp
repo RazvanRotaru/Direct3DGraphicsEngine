@@ -5,6 +5,11 @@ std::pair<int, int> Mouse::GetPos() const noexcept {
 	return { x, y };
 }
 
+std::pair<int, int> Mouse::GetMouseDelta() const noexcept
+{
+	return { x - prevPos.first, y - prevPos.second };
+}
+
 int Mouse::GetPosX() const noexcept {
 	return x;
 }
@@ -74,4 +79,9 @@ void Mouse::OnScrollDelta(int x, int y, int delta) noexcept {
 		wheelDeltaCarry += WHEEL_DELTA;
 		OnScroll(-x, -y);
 	}
+}
+
+void Mouse::OnNewFrame() noexcept
+{
+	prevPos = { x, y };
 }

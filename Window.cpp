@@ -102,6 +102,16 @@ Vector2 Window::GetMousePosition() noexcept {
 	return { dx, dy };
 }
 
+Vector2 Window::GetMouseDelta() const noexcept
+{
+	std::pair<int, int> delta = mouse.GetMouseDelta();
+
+	float dx = 1 + Math::ClipCoursor((float)delta.first, (float)width);
+	float dy = 1 + Math::ClipCoursor((float)delta.second, (float)height);
+
+	return { dx, dy };
+}
+
 BOOL Window::OnKeyPressed(BYTE keyCode) noexcept {
 	return kbd.KeyPressed(keyCode);
 }
@@ -243,8 +253,8 @@ LRESULT Window::HandlMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noex
 }
 
 Window::WindowException::WindowException(int line,
-										 const char* file,
-										 HRESULT hr)
+	const char* file,
+	HRESULT hr)
 	noexcept : EngineException(line, file), hr(hr) {
 }
 

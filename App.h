@@ -16,7 +16,11 @@ private:
 	Window wnd;
 	Camera camera;
 	Timer timer;
-	std::vector<std::unique_ptr<class Drawable>> drawables;
+
+	// TODO use smart pointers
+	//std::vector<class Drawable*> drawables;
+
+	std::vector<std::unique_ptr<Actor>> actors;
 
 	// TEst
 	PointLight* pointLight;

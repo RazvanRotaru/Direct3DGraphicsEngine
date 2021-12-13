@@ -13,17 +13,17 @@ public:
 	Renderer(Actor* const& actor);
 
 	void SetMesh(Mesh* const& mesh);
-
+protected:
 	virtual void LoadBuffers();
 	virtual void LoadConstantBuffers();
-
+public:
 	virtual DirectX::XMMATRIX GetTransformXM() const noexcept override;
 
 	// TODO: remove
 	virtual void Update(float dt) noexcept override {}
 	virtual void Update(float dx, float dy) noexcept override {}
 
-private:
+protected:
 	Actor* actor;
 	Mesh* mesh;
 

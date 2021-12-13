@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "Transform.h"
 
 Camera::Camera() noexcept {
 	Reset();

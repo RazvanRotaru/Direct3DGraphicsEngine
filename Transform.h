@@ -13,13 +13,16 @@ public:
 
 	void Move(Vector3 direction) noexcept;
 	void Rotate(Vector3 rotation) noexcept;
+	void Scale(Vector3 scale) noexcept;
 	void Reset() noexcept;
 
 	void SetPosition(Vector3 position) noexcept;
 	void SetRotation(Vector3 rotation) noexcept;
+	void SetScale(Vector3 scale) noexcept;
 
 	Vector3 GetPosition() const noexcept;
 	Vector3 GetRotation() const noexcept;
+	Vector3 GetScale() const noexcept;
 	DirectX::XMMATRIX GetModelMatrix() noexcept;
 
 	void SetParent(Transform* const& transform) noexcept;
@@ -32,6 +35,7 @@ public:
 private:
 	Vector3 position;
 	Vector3 rotation;
+	Vector3 scale;
 
 	Actor* actor;
 
