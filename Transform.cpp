@@ -26,10 +26,6 @@ void Transform::Move(Vector3 direction) noexcept {
 		position.y + direction.y,
 		position.z + direction.z
 	};
-
-	for (Transform* child : children) {
-		child->Move(direction);
-	}
 }
 
 void Transform::Rotate(Vector3 rotation) noexcept {
@@ -38,10 +34,6 @@ void Transform::Rotate(Vector3 rotation) noexcept {
 		this->rotation.y + rotation.y,
 		this->rotation.z + rotation.z
 	};
-
-	for (Transform* child : children) {
-		child->Rotate(rotation);
-	}
 }
 
 void Transform::Scale(Vector3 scale) noexcept {
@@ -50,11 +42,6 @@ void Transform::Scale(Vector3 scale) noexcept {
 		this->scale.y + scale.y,
 		this->scale.z + scale.z
 	};
-
-	for (Transform* child : children) {
-		child->Scale(scale);
-	}
-
 }
 
 void Transform::Reset() noexcept {
@@ -63,33 +50,27 @@ void Transform::Reset() noexcept {
 }
 
 void Transform::SetPosition(Vector3 position) noexcept {
-	Vector3 deltaPosition = {
-		position.x - this->position.x,
-		position.y - this->position.y,
-		position.z - this->position.z
+	this->position = {
+		position.x,
+		position.y,
+		position.z
 	};
-
-	Move(deltaPosition);
 }
 
 void Transform::SetRotation(Vector3 rotation) noexcept {
-	Vector3 deltaRotation = {
-		rotation.x - this->rotation.x,
-		rotation.y - this->rotation.y,
-		rotation.z - this->rotation.z
+	this->rotation = {
+		rotation.x,
+		rotation.y,
+		rotation.z
 	};
-
-	Rotate(deltaRotation);
 }
 
 void Transform::SetScale(Vector3 scale) noexcept {
-	Vector3 deltaScale = {
-		scale.x - this->scale.x,
-		scale.y - this->scale.y,
-		scale.z - this->scale.z
+	this->scale = {
+		scale.x,
+		scale.y,
+		scale.z
 	};
-
-	Scale(deltaScale);
 }
 
 Vector3 Transform::GetPosition() const noexcept {
@@ -108,9 +89,11 @@ Vector3 Transform::GetScale() const noexcept
 DirectX::XMMATRIX Transform::GetModelMatrix() noexcept {
 	// if parent exists add its rotation and translation
 	if (parent != nullptr) {
-		return parent->GetModelMatrix() * Math::Translation(position) * Math::Rotation(rotation);
+		return Math::Scaling(scale) * Math::Rotation(rotation) * Math::Translation(position) * parent->GetModelMatrix();
 	}
-	return Math::Translation(position) * Math::Rotation(rotation);
+
+	// the multiplication order is inverse because thosee matrixes are transposed
+	return Math::Scaling(scale) * Math::Rotation(rotation) * Math::Translation(position);
 }
 
 void Transform::SetParent(Transform* const& transform) noexcept {

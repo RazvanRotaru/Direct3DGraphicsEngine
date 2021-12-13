@@ -28,7 +28,7 @@ cbuffer Camera
 };
 
 
-float4 main(float3 pos : POSITION, float3 normal : NORMAL, float2 uv : UV) : SV_Target
+float4 main(float3 pos : POSITION, float3 normal : NORMAL, float2 uv : UV) : SV_TARGET
 {
 	float4 tex_color = tex.Sample(splr, uv);
     return float4(saturate(tex_color.xyz * light_dir * cam_pos), 1.0f);

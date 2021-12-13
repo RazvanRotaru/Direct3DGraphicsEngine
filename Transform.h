@@ -35,7 +35,7 @@ public:
 private:
 	Vector3 position;
 	Vector3 rotation;
-	Vector3 scale;
+	Vector3 scale = Vector3(1.0f, 1.0f, 1.0f);
 
 	Actor* actor;
 

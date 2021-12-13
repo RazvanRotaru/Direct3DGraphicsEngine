@@ -12,7 +12,7 @@ class Renderer : public DrawableBase<Mesh>
 public:
 	Renderer(Actor* const& actor);
 
-	void SetMesh(Mesh* const& mesh);
+	virtual void SetMesh(Mesh* const& mesh);
 protected:
 	virtual void LoadBuffers();
 	virtual void LoadConstantBuffers();
@@ -22,6 +22,11 @@ public:
 	// TODO: remove
 	virtual void Update(float dt) noexcept override {}
 	virtual void Update(float dx, float dy) noexcept override {}
+
+	void SetVertexShader(LPCWSTR vertexShader);
+	void SetPixelShader(LPCWSTR pixelShader);
+
+	void SetTexture(LPCSTR texture);
 
 protected:
 	Actor* actor;

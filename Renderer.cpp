@@ -23,14 +23,12 @@ void Renderer::LoadBuffers()
 	AddBind(std::make_unique<IndexBuffer>(*(actor->GetWorld()), mesh->GetIndices()));
 
 	AddBind(std::make_unique<Texture>(*(actor->GetWorld()), Surface::FromFile(texture)));
-
+	AddBind(std::make_unique<PixelShader>(*(actor->GetWorld()), pixelShader));
+	auto pVShader = std::make_unique<VertexShader>(*(actor->GetWorld()), vertexShader);
+	auto pVShaderBC = pVShader->GetBytecode();
+	AddBind(std::move(pVShader));
+	
 	if (!IsStaticInitialized()) {
-		
-		AddStaticBind(std::make_unique<PixelShader>(*(actor->GetWorld()), pixelShader));
-		auto pVShader = std::make_unique<VertexShader>(*(actor->GetWorld()), vertexShader);
-		auto pVShaderBC = pVShader->GetBytecode();
-		AddStaticBind(std::move(pVShader));
-
 		AddStaticBind(std::make_unique<Sampler>(*(actor->GetWorld())));
 
 		AddStaticBind(std::make_unique<InputLayout>(*(actor->GetWorld()), mesh->GetLayout(), pVShaderBC));
@@ -53,4 +51,16 @@ void Renderer::LoadConstantBuffers() {
 DirectX::XMMATRIX Renderer::GetTransformXM() const noexcept
 {
     return actor->GetTransform()->GetModelMatrix();
+}
+
+void Renderer::SetVertexShader(LPCWSTR vertexShader) {
+	this->vertexShader = vertexShader;
+}
+
+void Renderer::SetPixelShader(LPCWSTR pixelShader) {
+	this->pixelShader = pixelShader;
+}
+
+void Renderer::SetTexture(LPCSTR texture) {
+	this->texture = texture;
 }

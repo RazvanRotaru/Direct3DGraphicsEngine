@@ -1,45 +1,27 @@
 #include "Math.h"
 
 float Math::Dot(DirectX::XMFLOAT2 a, DirectX::XMFLOAT2 b) {
-	DirectX::XMVECTOR aVec{}, bVec{};
-	DirectX::XMStoreFloat2(&a, aVec);
-	DirectX::XMStoreFloat2(&b, bVec);
-	return DirectX::XMVectorGetX(DirectX::XMVector2Dot(aVec, bVec));
+	return DirectX::XMVectorGetX(DirectX::XMVector2Dot(DirectX::XMLoadFloat2(&a), DirectX::XMLoadFloat2(&b)));
 }
 
 float Math::Dot(DirectX::XMFLOAT3 a, DirectX::XMFLOAT3 b) {
-	DirectX::XMVECTOR aVec{}, bVec{};
-	DirectX::XMStoreFloat3(&a, aVec);
-	DirectX::XMStoreFloat3(&b, bVec);
-	return DirectX::XMVectorGetX(DirectX::XMVector3Dot(aVec, bVec));
+	return DirectX::XMVectorGetX(DirectX::XMVector3Dot(DirectX::XMLoadFloat3(&a), DirectX::XMLoadFloat3(&b)));
 }
 
 float Math::Dot(DirectX::XMFLOAT4 a, DirectX::XMFLOAT4 b) {
-	DirectX::XMVECTOR aVec{}, bVec{};
-	DirectX::XMStoreFloat4(&a, aVec);
-	DirectX::XMStoreFloat4(&b, bVec);
-	return DirectX::XMVectorGetX(DirectX::XMVector4Dot(aVec, bVec));
+	return DirectX::XMVectorGetX(DirectX::XMVector4Dot(DirectX::XMLoadFloat4(&a), DirectX::XMLoadFloat4(&b)));
 }
 
 float Math::Dot(DirectX::XMFLOAT2 a, DirectX::XMFLOAT3 b) {
-	DirectX::XMVECTOR aVec{}, bVec{};
-	DirectX::XMStoreFloat2(&a, aVec);
-	DirectX::XMStoreFloat3(&b, bVec);
-	return DirectX::XMVectorGetX(DirectX::XMVector2Dot(aVec, bVec));
+	return DirectX::XMVectorGetX(DirectX::XMVector2Dot(DirectX::XMLoadFloat2(&a), DirectX::XMLoadFloat3(&b)));
 }
 
 float Math::Dot(DirectX::XMFLOAT2 a, DirectX::XMFLOAT4 b) {
-	DirectX::XMVECTOR aVec{}, bVec{};
-	DirectX::XMStoreFloat2(&a, aVec);
-	DirectX::XMStoreFloat4(&b, bVec);
-	return DirectX::XMVectorGetX(DirectX::XMVector2Dot(aVec, bVec));
+	return DirectX::XMVectorGetX(DirectX::XMVector2Dot(DirectX::XMLoadFloat2(&a), DirectX::XMLoadFloat4(&b)));
 }
 
 float Math::Dot(DirectX::XMFLOAT3 a, DirectX::XMFLOAT4 b) {
-	DirectX::XMVECTOR aVec{}, bVec{};
-	DirectX::XMStoreFloat3(&a, aVec);
-	DirectX::XMStoreFloat4(&b, bVec);
-	return DirectX::XMVectorGetX(DirectX::XMVector3Dot(aVec, bVec));
+	return DirectX::XMVectorGetX(DirectX::XMVector3Dot(DirectX::XMLoadFloat3(&a), DirectX::XMLoadFloat4(&b)));
 }
 
 DirectX::XMMATRIX Math::Transpose(DirectX::XMMATRIX mat) {
@@ -47,27 +29,15 @@ DirectX::XMMATRIX Math::Transpose(DirectX::XMMATRIX mat) {
 }
 
 DirectX::XMVECTOR Math::Cross(DirectX::XMFLOAT3 a, DirectX::XMFLOAT3 b) {
-	DirectX::XMVECTOR aVec{}, bVec{};
-	DirectX::XMStoreFloat3(&a, aVec);
-	DirectX::XMStoreFloat3(&b, bVec);
-
-	return DirectX::XMVector3Cross(aVec, bVec);
+	return DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&a), DirectX::XMLoadFloat3(&b));
 }
 
 DirectX::XMVECTOR Math::Cross(DirectX::XMFLOAT3 a, DirectX::XMFLOAT4 b) {
-	DirectX::XMVECTOR aVec{}, bVec{};
-	DirectX::XMStoreFloat3(&a, aVec);
-	DirectX::XMStoreFloat4(&b, bVec);
-
-	return DirectX::XMVector3Cross(aVec, bVec);
+	return DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&a), DirectX::XMLoadFloat4(&b));
 }
 
 DirectX::XMVECTOR Math::Cross(DirectX::XMFLOAT4 a, DirectX::XMFLOAT4 b) {
-	DirectX::XMVECTOR aVec{}, bVec{};
-	DirectX::XMStoreFloat4(&a, aVec);
-	DirectX::XMStoreFloat4(&b, bVec);
-
-	return DirectX::XMVector3Cross(aVec, bVec);
+	return DirectX::XMVector3Cross(DirectX::XMLoadFloat4(&a), DirectX::XMLoadFloat4(&b));
 }
 
 DirectX::XMMATRIX Math::Rotation(float angle, Axis axis) {
@@ -87,9 +57,7 @@ DirectX::XMMATRIX Math::Rotation(float roll, float pitch, float yaw) {
 }
 
 DirectX::XMMATRIX Math::Rotation(Vector3 eulerAngles) {
-	DirectX::XMVECTOR rotVec{};
-	DirectX::XMStoreFloat3(&eulerAngles, rotVec);
-	return DirectX::XMMatrixRotationRollPitchYawFromVector(rotVec);
+	return DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&eulerAngles));
 }
 
 DirectX::XMMATRIX Math::Translation(float x, float y, float z) {
@@ -97,13 +65,16 @@ DirectX::XMMATRIX Math::Translation(float x, float y, float z) {
 }
 
 DirectX::XMMATRIX Math::Translation(Vector3 position) {
-	DirectX::XMVECTOR tVec{};
-	DirectX::XMStoreFloat3(&position, tVec);
-	return DirectX::XMMatrixTranslationFromVector(tVec);
+	return DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&position));
 }
 
 DirectX::XMMATRIX Math::Scaling(float x, float y, float z) {
 	return DirectX::XMMatrixScaling(x, y, z);
+}
+
+DirectX::XMMATRIX Math::Scaling(Vector3 scale)
+{
+	return DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&scale));
 }
 
 DirectX::XMMATRIX Math::Projection(float fov, float aspectRatio, float zNear, float zFar) {

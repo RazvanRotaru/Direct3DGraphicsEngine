@@ -11,7 +11,7 @@ public:
 private:
 	void Tick();
 
-	void UpdateCamera(float delta) noexcept;
+	void UpdateViewport(float delta) noexcept;
 private:
 	Window wnd;
 	Camera camera;

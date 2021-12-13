@@ -41,6 +41,8 @@ public:
 	static DirectX::XMMATRIX Translation(Vector3 position);
 
 	static DirectX::XMMATRIX Scaling(float x, float y, float z);
+	static DirectX::XMMATRIX Scaling(Vector3 scale);
+
 	static DirectX::XMMATRIX Projection(float fov, float aspectRatio, float zNear, float zFar);
 
 	static DirectX::XMVECTOR Transform(DirectX::XMVECTOR vec, DirectX::XMMATRIX mat);
