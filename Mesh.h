@@ -18,7 +18,14 @@ struct Material {
 	float shininess;
 	float kd;
 	float ks;
-	float padding;
+	float padding[17];
+};
+
+constexpr Material defaultMaterial = {
+	{1.0f, 0.0f, 1.0f},
+	0.5f,
+	0.1f,
+	1.0f,
 };
 
 
@@ -39,8 +46,8 @@ public:
 	};
 public:
 	Mesh() = default;
-	Mesh(Type, Material = {}) noexcept;
-	Mesh(std::vector<Vertex>, std::vector<Index>, Material = {}) noexcept;
+	Mesh(Type, Material = defaultMaterial) noexcept;
+	Mesh(std::vector<Vertex>, std::vector<Index>, Material = defaultMaterial) noexcept;
 
 	std::vector<Vertex> GetVertices() noexcept;
 	std::vector<Index> GetIndices() noexcept;

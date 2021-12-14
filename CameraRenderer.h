@@ -8,11 +8,11 @@ public:
 
 	void SetViewport() const noexcept;
 protected:
-	virtual void LoadConstantBuffers();
+	virtual void LoadConstantBuffers() override;
 private:
 	struct CameraCbuf {
-		Vector3 pos;
-		float padding;
+		alignas(16) Vector3 pos;
+		float padding[48];
 	};
 
 	mutable CameraCbuf cbData;

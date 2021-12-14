@@ -39,30 +39,30 @@ App::App() : wnd(800, 600, TEXT("MG3D_Engine")), camera(wnd.GFX()) {
 		plActor->SetMesh(mesh);
 		actors.push_back(std::unique_ptr<Actor>(plActor));
 	}
-	{
-		Actor* plActor = new Actor(wnd.GFX(), pointLight->GetTransform());
-		plActor->GetTransform()->SetScale(Vector3(0.5f, 0.5f, 0.5f));
-		plActor->GetTransform()->SetPosition(Vector3(3.0f, 0.0f, 0.0f));
-		plActor->GetRenderer()->SetPixelShader(TEXT("SolidPixelShader.cso"));
-		plActor->SetMesh(mesh);
-		actors.push_back(std::unique_ptr<Actor>(plActor));
-	}
-	{
-		Actor* plActor;
-		plActor = new Actor(wnd.GFX(), pointLight->GetTransform());
-		plActor->GetTransform()->SetScale(Vector3(0.5f, 0.5f, 0.5f));
-		plActor->GetTransform()->SetPosition(Vector3(-3.0f, 0.0f, 0.0f));
-		plActor->GetTransform()->SetRotation(Vector3(45.0f, 45.0f, 45.0f));
-		plActor->GetRenderer()->SetPixelShader(TEXT("SolidPixelShader.cso"));
-		plActor->SetMesh(mesh);
-		actors.push_back(std::unique_ptr<Actor>(plActor));
-	}
-	{
-		Actor* plActor = new Actor(wnd.GFX(), pointLight->GetTransform());
-		plActor->GetRenderer()->SetPixelShader(TEXT("SolidPixelShader.cso"));
-		plActor->SetMesh(mesh);
-		actors.push_back(std::unique_ptr<Actor>(plActor));
-	}
+	//{
+	//	Actor* plActor = new Actor(wnd.GFX(), pointLight->GetTransform());
+	//	plActor->GetTransform()->SetScale(Vector3(0.5f, 0.5f, 0.5f));
+	//	plActor->GetTransform()->SetPosition(Vector3(3.0f, 0.0f, 0.0f));
+	//	plActor->GetRenderer()->SetPixelShader(TEXT("SolidPixelShader.cso"));
+	//	plActor->SetMesh(mesh);
+	//	actors.push_back(std::unique_ptr<Actor>(plActor));
+	//}
+	//{
+	//	Actor* plActor;
+	//	plActor = new Actor(wnd.GFX(), pointLight->GetTransform());
+	//	plActor->GetTransform()->SetScale(Vector3(0.5f, 0.5f, 0.5f));
+	//	plActor->GetTransform()->SetPosition(Vector3(-3.0f, 0.0f, 0.0f));
+	//	plActor->GetTransform()->SetRotation(Vector3(45.0f, 45.0f, 45.0f));
+	//	plActor->GetRenderer()->SetPixelShader(TEXT("SolidPixelShader.cso"));
+	//	plActor->SetMesh(mesh);
+	//	actors.push_back(std::unique_ptr<Actor>(plActor));
+	//}
+	//{
+	//	Actor* plActor = new Actor(wnd.GFX(), pointLight->GetTransform());
+	//	plActor->GetRenderer()->SetPixelShader(TEXT("SolidPixelShader.cso"));
+	//	plActor->SetMesh(mesh);
+	//	actors.push_back(std::unique_ptr<Actor>(plActor));
+	//}
 	pointLight->GetTransform()->Move(Vector3(0.0f, 10.0f, -3.0f));
 	pointLight->GetTransform()->Rotate(Vector3(40.0f, 0.0f, 0.0f));
 
@@ -79,13 +79,15 @@ HRESULT App::Run() {
 		if (const auto errCode = Window::ProcessMessages()) {
 			return static_cast<HRESULT>(*errCode);
 		}
+		const float dt = timer.Mark();
 
-		Tick();
+		BeforeTick(dt);
+		Tick(dt);
+		AfterTick(dt);
 	}
 }
 
-void App::Tick() {
-	const float dt = timer.Mark();
+void App::Tick(float dt) {
 	std::ostringstream oss;
 	//oss << "Frame time: " << std::setprecision(1) << std::fixed << dt << "s";
 	//oss << "Mouse position: (" << wnd.GetMouseDelta().x << ", " << wnd.GetMouseDelta().y << ")";
@@ -94,33 +96,22 @@ void App::Tick() {
 		<< camera.GetTransform()->GetPosition().z << ")";
 	wnd.SetTitle(oss.str());
 
-	const float c = sin(timer.Peek()) * 0.5f;
-
-	const auto mousePosition = wnd.GetMousePosition();
-
-	wnd.GFX().BeginFrame(0.0f, 0.0f, 0.0f);
-	wnd.GFX().SetCamera(camera.GetViewMatrix());
-
-	UpdateViewport(dt);
-
-	pointLight->Bind();
-
-	//for (auto& d : drawables) {
-	//	if (typeid(d) == typeid(Actor)) {
-	//		continue;
-	//	}
-
-	//	d->Update(wnd.kbd.KeyPressed(VK_SPACE) ? 0.0f : mousePosition.x, 
-	//				wnd.kbd.KeyPressed(VK_SPACE) ? 0.0f : mousePosition.y);
-	//	d->Draw(wnd.GFX());
-	//}
-
 	for (auto& actor : actors) {
 		actor->Tick(dt);
 	}
+}
 
+void App::BeforeTick(float dt) {
+	wnd.GFX().BeginFrame(0.0f, 0.0f, 0.0f);
+	
+	UpdateViewport(dt);
+	wnd.GFX().SetCamera(camera.GetViewMatrix());
+
+	pointLight->Bind();
+}
+
+void App::AfterTick(float dt) {
 	pointLight->Draw();
-
 	wnd.GFX().EndFrame();
 }
 

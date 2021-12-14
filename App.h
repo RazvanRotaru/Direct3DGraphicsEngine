@@ -9,8 +9,10 @@ public:
 	HRESULT Run();
 	~App();
 private:
-	void Tick();
+	void Tick(float dt);
 
+	void BeforeTick(float dt);
+	void AfterTick(float dt);
 	void UpdateViewport(float delta) noexcept;
 private:
 	Window wnd;
