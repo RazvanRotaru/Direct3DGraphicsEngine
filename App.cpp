@@ -7,6 +7,9 @@
 #include "Mesh.h"
 #include <sstream>
 #include <iomanip>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #include "Transform.h"
 #include "Renderer.h"
@@ -14,6 +17,11 @@
 GDIPlusManager gdipm;
 
 App::App() : wnd(800, 600, TEXT("MG3D_Engine")) {
+
+	// TEST AssImp
+	Assimp::Importer importer;
+
+	
 	// TEST GDI+
 	const auto s = Surface::FromFile("Resources\\Textures\\gokuh.jpg");
 	//drawables.push_back(std::make_unique<Cube>(wnd.GFX()));
