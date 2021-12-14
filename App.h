@@ -16,13 +16,13 @@ private:
 	void UpdateViewport(float delta) noexcept;
 private:
 	Window wnd;
-	Camera camera;
 	Timer timer;
 
 	// TODO use smart pointers
 	//std::vector<class Drawable*> drawables;
 
 	std::vector<std::unique_ptr<Actor>> actors;
+	std::unique_ptr<Camera> camera;
 
 	// TEst
 	PointLight* pointLight;

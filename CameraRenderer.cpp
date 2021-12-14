@@ -3,9 +3,8 @@
 #include "Transform.h"
 
 CameraRenderer::CameraRenderer(Actor* const& actor) 
-	: Renderer(actor), cbuf(*(actor->GetWorld())) {
+	: Renderer(actor), cbuf(*(actor->GetWorld()), 2u) {
 	cbData = {Vector3(4.0f, 4.0f, 3.0f)};
-	LoadConstantBuffers();
 }
 
 void CameraRenderer::SetViewport() const noexcept {
@@ -13,8 +12,4 @@ void CameraRenderer::SetViewport() const noexcept {
 	cbData.pos = Vector3(10.0f, 10.0f, 10.f);
 	cbuf.Update(*(actor->GetWorld()), cbData);
 	cbuf.Bind(*(actor->GetWorld()));
-}
-
-void CameraRenderer::LoadConstantBuffers() {
-	AddBind(std::make_unique<PixelConstantBuffer<CameraCbuf>>(*(actor->GetWorld()), cbData, 2u));
 }

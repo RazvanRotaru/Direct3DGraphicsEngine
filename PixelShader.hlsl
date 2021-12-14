@@ -2,6 +2,14 @@
 SamplerState splr;
 Texture2D tex;
 
+cbuffer Material
+{
+    float3 color;
+    float shininess;
+    float kd;
+    float ks;
+};
+
 cbuffer Light
 {
     float3 light_pos;
@@ -12,15 +20,6 @@ cbuffer Light
     float att_lin;
     float att_quad;
 };
-
-cbuffer Material
-{
-    float3 color;
-    float shininess;
-    float kd;
-    float ks;
-};
-
 
 // camera position isn't sent correctly
 cbuffer Camera

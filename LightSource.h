@@ -7,8 +7,6 @@ public:
 	LightSource(Actor* const& actor);
 
 	void CastLight() const noexcept;
-protected:
-	virtual void LoadConstantBuffers() override;
 private:
 	struct PointLightCBuf {
 		alignas(16) Vector3 pos;

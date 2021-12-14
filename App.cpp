@@ -13,10 +13,11 @@
 
 GDIPlusManager gdipm;
 
-App::App() : wnd(800, 600, TEXT("MG3D_Engine")), camera(wnd.GFX()) {
+App::App() : wnd(800, 600, TEXT("MG3D_Engine")) {
 	// TEST GDI+
 	const auto s = Surface::FromFile("Resources\\Textures\\gokuh.jpg");
 	//drawables.push_back(std::make_unique<Cube>(wnd.GFX()));
+	camera = std::make_unique<Camera>(wnd.GFX());
 
 	// TODO store width and height in window
 	wnd.GFX().SetProjection(Math::Projection(1.0f, 4.0f / 3.0f, 0.5f, 60.0f));
@@ -28,7 +29,7 @@ App::App() : wnd(800, 600, TEXT("MG3D_Engine")), camera(wnd.GFX()) {
 	//drawables.push_back((Drawable*)(actor->GetRenderer()));
 	actors.push_back(std::unique_ptr<Actor>(actor));
 	pointLight = new PointLight(wnd.GFX());
-	
+
 
 	// Test Hierarchy
 	{
@@ -66,7 +67,7 @@ App::App() : wnd(800, 600, TEXT("MG3D_Engine")), camera(wnd.GFX()) {
 	pointLight->GetTransform()->Move(Vector3(0.0f, 10.0f, -3.0f));
 	pointLight->GetTransform()->Rotate(Vector3(40.0f, 0.0f, 0.0f));
 
-	camera.GetTransform()->Move(Vector3(0.0f, 0.0f, -20.0f));
+	camera->GetTransform()->Move(Vector3(0.0f, 0.0f, -20.0f));
 }
 
 App::~App() {}
@@ -91,9 +92,9 @@ void App::Tick(float dt) {
 	std::ostringstream oss;
 	//oss << "Frame time: " << std::setprecision(1) << std::fixed << dt << "s";
 	//oss << "Mouse position: (" << wnd.GetMouseDelta().x << ", " << wnd.GetMouseDelta().y << ")";
-	oss << "Camera position: (" << camera.GetTransform()->GetPosition().x << ", "
-		<< camera.GetTransform()->GetPosition().y << ", "
-		<< camera.GetTransform()->GetPosition().z << ")";
+	oss << "Camera position: (" << camera->GetTransform()->GetPosition().x << ", "
+		<< camera->GetTransform()->GetPosition().y << ", "
+		<< camera->GetTransform()->GetPosition().z << ")";
 	wnd.SetTitle(oss.str());
 
 	for (auto& actor : actors) {
@@ -103,9 +104,9 @@ void App::Tick(float dt) {
 
 void App::BeforeTick(float dt) {
 	wnd.GFX().BeginFrame(0.0f, 0.0f, 0.0f);
-	
+
 	UpdateViewport(dt);
-	wnd.GFX().SetCamera(camera.GetViewMatrix());
+	wnd.GFX().SetCamera(camera->GetViewMatrix());
 
 	pointLight->Bind();
 }
@@ -117,28 +118,28 @@ void App::AfterTick(float dt) {
 
 void App::UpdateViewport(float delta) noexcept {
 	if (wnd.kbd.KeyPressed('W')) {
-		camera.Move({ 0.0f, 0.0f, delta });
+		camera->Move({ 0.0f, 0.0f, delta });
 	}
 	if (wnd.kbd.KeyPressed('S')) {
-		camera.Move({ 0.0f, 0.0f, -delta });
+		camera->Move({ 0.0f, 0.0f, -delta });
 	}
 	if (wnd.kbd.KeyPressed('A')) {
-		camera.Move({ -delta, 0.0f, 0.0f });
+		camera->Move({ -delta, 0.0f, 0.0f });
 	}
 	if (wnd.kbd.KeyPressed('D')) {
-		camera.Move({ delta, 0.0f, 0.0f });
+		camera->Move({ delta, 0.0f, 0.0f });
 	}
 	if (wnd.kbd.KeyPressed('Q')) {
-		camera.Move({ 0.0f, -delta , 0.0f });
+		camera->Move({ 0.0f, -delta , 0.0f });
 	}
 	if (wnd.kbd.KeyPressed('E')) {
-		camera.Move({ 0.0f, delta, 0.0f });
+		camera->Move({ 0.0f, delta, 0.0f });
 	}
 
 	if (wnd.mouse.ButtonPressed(Mouse::Button::Right)) {
 		const auto mousePosition = wnd.GetMouseDelta();
-		camera.Rotate(mousePosition.x, mousePosition.y);
+		camera->Rotate(mousePosition.x, mousePosition.y);
 	}
 
-	camera.SetViewport();
+	camera->SetViewport();
 }

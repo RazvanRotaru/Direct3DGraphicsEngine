@@ -40,7 +40,7 @@ void Renderer::LoadBuffers()
 
 void Renderer::LoadConstantBuffers() {
 
-	AddBind(std::make_unique<PixelConstantBuffer<Material>>(*(actor->GetWorld()), mesh->GetMaterial(), 1u));
+	AddBind(std::make_unique<PixelConstantBuffer<Material>>(*(actor->GetWorld()), mesh->GetMaterial()));
 }
 
 DirectX::XMMATRIX Renderer::GetTransformXM() const noexcept

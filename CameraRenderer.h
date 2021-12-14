@@ -7,11 +7,11 @@ public:
 	CameraRenderer(Actor* const& actor);
 
 	void SetViewport() const noexcept;
-protected:
-	virtual void LoadConstantBuffers() override;
+	void SetMesh(Mesh* const& mesh) override {}
 private:
 	struct CameraCbuf {
-		alignas(16) Vector3 pos;
+		Vector3 pos;
+		float padding;
 	};
 
 	mutable CameraCbuf cbData;

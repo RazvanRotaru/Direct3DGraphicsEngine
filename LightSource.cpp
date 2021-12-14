@@ -6,7 +6,7 @@
 #include "Transform.h"
 
 LightSource::LightSource(Actor* const& actor) 
-	: Renderer(actor), cbuf(*(actor->GetWorld())) {
+	: Renderer(actor), cbuf(*(actor->GetWorld()), 1u) {
 	cbData = {
 			{ 0.0f,0.0f,0.0f },			// position (automatically updated)
 			{ 0.15f,0.45f,0.35f },		// specular color
@@ -16,17 +16,10 @@ LightSource::LightSource(Actor* const& actor)
 			0.045f,						// linear attenuation
 			0.0075f,					// quadratic attenuation
 	};
-	LoadConstantBuffers();
 }
 
 void LightSource::CastLight() const noexcept {
 	cbData.pos = actor->GetTransform()->GetPosition();
 	cbuf.Update(*(actor->GetWorld()), cbData);
 	cbuf.Bind(*(actor->GetWorld()));
-}
-
-// TODO: add mesh will create another buffer
-// either do not LoadConstantBuffers() in ctor or make Renderer::SetMesh() virtual and override
-void LightSource::LoadConstantBuffers() {
-	AddBind(std::make_unique<PixelConstantBuffer<PointLightCBuf>>(*(actor->GetWorld()), cbData));
 }
