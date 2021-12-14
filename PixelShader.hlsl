@@ -21,7 +21,6 @@ cbuffer Light
     float att_quad;
 };
 
-// camera position isn't sent correctly
 cbuffer Camera
 {
     float3 cam_pos;
@@ -31,10 +30,6 @@ cbuffer Camera
 float4 main(float3 pos : POSITION, float3 normal : NORMAL, float2 uv : UV) : SV_TARGET
 {
 	float4 tex_color = tex.Sample(splr, uv);
-    //return float4(saturate(tex_color.xyz * light_dir * cam_pos), 1.0f);
-    //return tex_color;
-    //return float4(saturate(tex_color.xyz * specular_color), 1.0f);
-    //return float4(cam_pos, 1.0f);
 
     float linear_att = att_lin;
     float quadratic_att = att_quad;
@@ -77,6 +72,5 @@ float4 main(float3 pos : POSITION, float3 normal : NORMAL, float2 uv : UV) : SV_
 
     float3 phong_col = specular_color + ambient_light + attenF * (diffuse_light + specular_light);
 
-    //return float4(cam_pos, 1.0f);
-    return float4(saturate(phong_col/* * tex_color.xyz * color*/), 1.0f);
+    return float4(saturate(phong_col * tex_color.xyz * color), 1.0f);
 }
