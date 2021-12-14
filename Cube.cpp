@@ -40,10 +40,6 @@ Cube::Cube(Graphics& gfx) :
 	);
 }
 
-void Cube::Update(float dt) noexcept {
-	yaw = dt;
-}
-
 void Cube::SetPos(Vector3 pos) noexcept {
 	this->pos = pos;
 }
@@ -56,7 +52,3 @@ DirectX::XMMATRIX Cube::GetTransformXM() const noexcept {
 		Math::Rotation(pitch, Axis::X);
 }
 
-void Cube::Update(float dx, float dy) noexcept {
-	yaw = -dx * 3.0f;
-	pitch = -dy * 3.0f;
-}

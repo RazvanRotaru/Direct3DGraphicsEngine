@@ -19,10 +19,6 @@ protected:
 public:
 	virtual DirectX::XMMATRIX GetTransformXM() const noexcept override;
 
-	// TODO: remove
-	virtual void Update(float dt) noexcept override {}
-	virtual void Update(float dx, float dy) noexcept override {}
-
 	void SetVertexShader(LPCWSTR vertexShader);
 	void SetPixelShader(LPCWSTR pixelShader);
 

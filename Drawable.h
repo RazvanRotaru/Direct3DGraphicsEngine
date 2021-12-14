@@ -17,8 +17,6 @@ public:
 	void Draw(Graphics& gfx) const noexcept(!IS_DEBUG);
 
 	virtual DirectX::XMMATRIX GetTransformXM() const noexcept = 0;
-	virtual void Update(float dt) noexcept = 0;
-	virtual void Update(float dx, float dy) noexcept = 0;
 protected:
 	template<class T>
 	T* QueryBindable() noexcept {
