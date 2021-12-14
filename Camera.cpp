@@ -7,35 +7,71 @@ Camera::Camera(Graphics& gfx) noexcept : Actor(gfx) {
 }
 
 void Camera::Move(Vector3 dir) noexcept {
-	// compute global movement direction
-	float pitch = transform->GetRotation().y;
-	float yaw = transform->GetRotation().z;
-	DirectX::XMStoreFloat3(&dir, Math::Transform(
-		DirectX::XMLoadFloat3(&dir),
-		Math::Rotation(0.0f, pitch, yaw) *
-		Math::Scaling(moveSpeed, moveSpeed, moveSpeed)
-	));
-
-	transform->Move(dir);
+	MoveRight(dir.x * moveSpeed);
+	MoveUpward(dir.y * moveSpeed);
+	MoveForward(dir.z * moveSpeed);
 }
 
 void Camera::Rotate(float dx, float dy) noexcept {
-	float pitch = transform->GetRotation().y;
-	float yaw = transform->GetRotation().z;
-	yaw = Math::WrapAngle(yaw + dx * rotationSpeed);
-	pitch = Math::Clamp(pitch + dy * rotationSpeed, -Math::PI * 0.5f, Math::PI * 0.5f);
-
-	transform->SetRotation(Vector3(0.0f, pitch, yaw));
+	RotateOX(dy * rotationSpeed);
+	RotateOY(dx * rotationSpeed);
 }
 
 void Camera::SetViewport() const noexcept {
 	dynamic_cast<CameraRenderer*>(renderer)->SetViewport();
 }
 
+void Camera::RotateOX(float dy) {
+	const auto forward = Math::Transform(DirectX::XMLoadFloat3(&(transform->forward)),
+		Math::RotateAround(transform->right, dy));
+	DirectX::XMStoreFloat3(&(transform->forward), Math::Normalize(forward));
+
+	DirectX::XMStoreFloat3(&(transform->up),
+		Math::Normalize(
+			Math::Cross(transform->right,
+				transform->forward)));
+}
+
+void Camera::RotateOY(float dx) {
+	DirectX::XMStoreFloat3(&(transform->forward), Math::Normalize(Math::Transform(
+		DirectX::XMLoadFloat3(&(transform->forward)), Math::Rotation(dx, Axis::Y))));
+
+	DirectX::XMStoreFloat3(&(transform->right), Math::Normalize(Math::Transform(
+		DirectX::XMLoadFloat3(&(transform->right)), Math::Rotation(dx, Axis::Y))));
+
+	DirectX::XMStoreFloat3(&(transform->up),
+		Math::Normalize(
+			Math::Cross(transform->right,
+				transform->forward)));
+}
+
+void Camera::MoveForward(float dist) {
+	transform->Move({
+		transform->forward.x * dist,
+		transform->forward.y * dist,
+		transform->forward.z * dist
+		});
+}
+
+void Camera::MoveUpward(float dist) {
+	transform->Move({
+		transform->up.x * dist,
+		transform->up.y * dist,
+		transform->up.z * dist
+		});
+}
+
+void Camera::MoveRight(float dist) {
+	Vector3 dir;
+	DirectX::XMStoreFloat3(&dir, Math::Normalize(Vector3(transform->right.x, 0.0f, transform->right.z)));
+
+	transform->Move({
+		dir.x * dist,
+		0.0f,
+		dir.z * dist
+		});
+}
+
 DirectX::XMMATRIX Camera::GetViewMatrix() const noexcept {
-	return Math::Translation(
-		-transform->GetPosition().x,
-		-transform->GetPosition().y,
-		-transform->GetPosition().z)
-		* Math::Rotation(0.0f, -transform->GetRotation().y, -transform->GetRotation().z);
+	return Math::LookTowards(transform->GetPosition(), transform->forward, transform->up);
 }

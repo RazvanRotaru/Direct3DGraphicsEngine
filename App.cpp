@@ -66,7 +66,7 @@ App::App() : wnd(800, 600, TEXT("MG3D_Engine")) {
 	pointLight->GetTransform()->Move(Vector3(0.0f, 10.0f, -3.0f));
 	pointLight->GetTransform()->Rotate(Vector3(40.0f, 0.0f, 0.0f));
 
-	camera->GetTransform()->Move(Vector3(0.0f, 0.0f, -20.0f));
+	camera->GetTransform()->Move(Vector3(0.0f, 0.0f, 20.0f));
 }
 
 App::~App() {}
@@ -123,10 +123,10 @@ void App::UpdateViewport(float delta) noexcept {
 		camera->Move({ 0.0f, 0.0f, -delta });
 	}
 	if (wnd.kbd.KeyPressed('A')) {
-		camera->Move({ -delta, 0.0f, 0.0f });
+		camera->Move({ delta, 0.0f, 0.0f });
 	}
 	if (wnd.kbd.KeyPressed('D')) {
-		camera->Move({ delta, 0.0f, 0.0f });
+		camera->Move({ -delta, 0.0f, 0.0f });
 	}
 	if (wnd.kbd.KeyPressed('Q')) {
 		camera->Move({ 0.0f, -delta , 0.0f });

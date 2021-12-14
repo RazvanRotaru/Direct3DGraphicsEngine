@@ -27,6 +27,9 @@ public:
 	static float Dot(DirectX::XMFLOAT2 a, DirectX::XMFLOAT4 b);
 	static float Dot(DirectX::XMFLOAT3 a, DirectX::XMFLOAT4 b);
 
+	static DirectX::XMVECTOR Normalize(DirectX::XMVECTOR v);
+	static DirectX::XMVECTOR Normalize(Vector3 v);
+
 	static DirectX::XMVECTOR Cross(DirectX::XMFLOAT3 a, DirectX::XMFLOAT3 b);
 	static DirectX::XMVECTOR Cross(DirectX::XMFLOAT3 a, DirectX::XMFLOAT4 b);
 	static DirectX::XMVECTOR Cross(DirectX::XMFLOAT4 a, DirectX::XMFLOAT4 b);
@@ -37,6 +40,8 @@ public:
 	static DirectX::XMMATRIX Rotation(float roll, float pitch, float yaw);
 	static DirectX::XMMATRIX Rotation(Vector3 eulerAngles);
 
+	static DirectX::XMMATRIX RotateAround(Vector3 axis, float angle);
+
 	static DirectX::XMMATRIX Translation(float x, float y, float z);
 	static DirectX::XMMATRIX Translation(Vector3 position);
 
@@ -46,6 +51,9 @@ public:
 	static DirectX::XMMATRIX Projection(float fov, float aspectRatio, float zNear, float zFar);
 
 	static DirectX::XMVECTOR Transform(DirectX::XMVECTOR vec, DirectX::XMMATRIX mat);
+
+	static DirectX::XMMATRIX LookAt(Vector3 position, Vector3 target, Vector3 up);
+	static DirectX::XMMATRIX LookTowards(Vector3 position, Vector3 direction, Vector3 up);
 
 	static float ClipCoursor(float pos, float wndSize);
 

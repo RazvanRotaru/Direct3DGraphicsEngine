@@ -41,5 +41,9 @@ private:
 
 	Transform* parent;
 	std::vector<Transform*> children;
+public:
+	Vector3 right = Vector3(1.0f, 0.0f, 0.0f);
+	Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+	Vector3 forward = Vector3(0.0f, 0.0f, -1.0);
 };
 

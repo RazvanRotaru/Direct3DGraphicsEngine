@@ -24,6 +24,16 @@ float Math::Dot(DirectX::XMFLOAT3 a, DirectX::XMFLOAT4 b) {
 	return DirectX::XMVectorGetX(DirectX::XMVector3Dot(DirectX::XMLoadFloat3(&a), DirectX::XMLoadFloat4(&b)));
 }
 
+DirectX::XMVECTOR Math::Normalize(DirectX::XMVECTOR v)
+{
+	return DirectX::XMVector3Normalize(v);
+}
+
+DirectX::XMVECTOR Math::Normalize(Vector3 v)
+{
+	return DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&v));
+}
+
 DirectX::XMMATRIX Math::Transpose(DirectX::XMMATRIX mat) {
 	return DirectX::XMMatrixTranspose(mat);
 }
@@ -60,6 +70,11 @@ DirectX::XMMATRIX Math::Rotation(Vector3 eulerAngles) {
 	return DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&eulerAngles));
 }
 
+DirectX::XMMATRIX Math::RotateAround(Vector3 axis, float angle)
+{
+	return DirectX::XMMatrixRotationAxis(DirectX::XMLoadFloat3(&axis), angle);
+}
+
 DirectX::XMMATRIX Math::Translation(float x, float y, float z) {
 	return DirectX::XMMatrixTranslation(x, y, z);
 }
@@ -83,6 +98,20 @@ DirectX::XMMATRIX Math::Projection(float fov, float aspectRatio, float zNear, fl
 
 DirectX::XMVECTOR Math::Transform(DirectX::XMVECTOR vec, DirectX::XMMATRIX mat) {
 	return DirectX::XMVector3Transform(vec, mat);
+}
+
+DirectX::XMMATRIX Math::LookAt(Vector3 position, Vector3 target, Vector3 up)
+{
+	return DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&position),
+		DirectX::XMLoadFloat3(&target),
+		DirectX::XMLoadFloat3(&up));
+}
+
+DirectX::XMMATRIX Math::LookTowards(Vector3 position, Vector3 direction, Vector3 up)
+{
+	return DirectX::XMMatrixLookToLH(DirectX::XMLoadFloat3(&position),
+		DirectX::XMLoadFloat3(&direction),
+		DirectX::XMLoadFloat3(&up));
 }
 
 float Math::ClipCoursor(float pos, float wndSize) {

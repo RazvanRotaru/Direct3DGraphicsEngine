@@ -16,6 +16,16 @@ public:
 	void Rotate(float dx, float dy) noexcept;
 
 	void SetViewport() const noexcept;
+	
+private:
+	void RotateOX(float dy);
+	void RotateOY(float dx);
+
+	void MoveForward(float dist);
+	void MoveUpward(float dist);
+	void MoveRight(float dist);
+
+public:
 	static constexpr float moveSpeed = 10.0f;
 	static constexpr float rotationSpeed = 5e-1f;
 };
