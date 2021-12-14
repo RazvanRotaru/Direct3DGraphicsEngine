@@ -18,7 +18,7 @@ struct Material {
 	float shininess;
 	float kd;
 	float ks;
-	float padding[17];
+	float padding;
 };
 
 constexpr Material defaultMaterial = {

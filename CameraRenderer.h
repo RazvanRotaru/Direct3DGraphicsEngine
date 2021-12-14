@@ -12,7 +12,6 @@ protected:
 private:
 	struct CameraCbuf {
 		alignas(16) Vector3 pos;
-		float padding[48];
 	};
 
 	mutable CameraCbuf cbData;

@@ -4,7 +4,7 @@
 
 CameraRenderer::CameraRenderer(Actor* const& actor) 
 	: Renderer(actor), cbuf(*(actor->GetWorld())) {
-	cbData = {Vector3(4.0f, 4.0f, 3.0f), 0.0f};
+	cbData = {Vector3(4.0f, 4.0f, 3.0f)};
 	LoadConstantBuffers();
 }
 
