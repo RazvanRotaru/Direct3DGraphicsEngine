@@ -1,4 +1,3 @@
-
 SamplerState splr;
 Texture2D tex;
 

@@ -2,6 +2,9 @@
 #include "Window.h"
 #include "Timer.h"
 #include "PointLight.h"
+#include "ImGUIManager.h"
+#include "CollisionManager.h"
+#include "LuaManager.h"
 
 class App {
 public:
@@ -15,7 +18,12 @@ private:
 	void AfterTick(float dt);
 	void UpdateViewport(float delta) noexcept;
 private:
-	Window wnd;
+	std::unique_ptr<Window> wnd;
+	
+	std::unique_ptr<ImGUIManager> imgui;
+	std::unique_ptr<CollisionManager> collMgr;
+	std::unique_ptr<LuaManager> luaMgr;
+
 	Timer timer;
 
 	// TODO use smart pointers
@@ -28,5 +36,6 @@ private:
 	PointLight* pointLight;
 	class Actor* actor;
 	class Mesh* mesh;
+	class Mesh* assMesh;
 };
 

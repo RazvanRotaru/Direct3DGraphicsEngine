@@ -19,7 +19,11 @@ LightSource::LightSource(Actor* const& actor)
 }
 
 void LightSource::CastLight() const noexcept {
-	cbData.pos = actor->GetTransform()->GetPosition();
+	cbData.pos = {
+		actor->GetTransform()->GetPosition().x,
+		actor->GetTransform()->GetPosition().y,
+		-actor->GetTransform()->GetPosition().z,
+	};
 	cbuf.Update(*(actor->GetWorld()), cbData);
 	cbuf.Bind(*(actor->GetWorld()));
 }

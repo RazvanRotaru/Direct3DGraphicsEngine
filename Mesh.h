@@ -31,6 +31,7 @@ constexpr Material defaultMaterial = {
 
 // TODO: this should be drawable, not the Actor
 class Mesh {
+	friend class Rigidbody;
 public:
 	enum class Type {
 		Cube,
@@ -53,6 +54,7 @@ public:
 	std::vector<Index> GetIndices() noexcept;
 	Material GetMaterial() noexcept;
 	static std::vector<D3D11_INPUT_ELEMENT_DESC> GetLayout() noexcept;
+	void LoadFromFile(LPCSTR path);
 
 private:
 	std::vector<Vertex> vertices;

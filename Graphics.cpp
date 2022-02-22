@@ -2,6 +2,7 @@
 #include "Math.h"
 #include "dxerr.h"
 #include <sstream>
+#include "include\imgui\imgui_impl_dx11.h"
 
 // TODO: remove
 #include "Mesh.h"
@@ -114,14 +115,13 @@ Graphics::Graphics(HWND hWnd) {
 		0.0f,	// TopLeftX
 		0.0f,	// TopLeftY
 		800.0f, // Width
-		600.0f, // Width
+		600.0f, // Heigth
 		0.0f,	// MinDepth
 		1.0f,	// MaxDepth
 	};
 	pImmContext->RSSetViewports(1u, &vp);
 
-	// init imgui d3d impl
-	//ImGui_ImplDX11_Init(pDevice.Get(), pImmContext.Get());
+	ImGui_ImplDX11_Init(pDevice.Get(), pImmContext.Get());
 }
 
 void Graphics::BeginFrame(float R, float G, float B) noexcept {

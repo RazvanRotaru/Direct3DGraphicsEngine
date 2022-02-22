@@ -1,4 +1,7 @@
 #include "Mesh.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 std::vector<D3D11_INPUT_ELEMENT_DESC> Mesh::layout =
 {
@@ -59,6 +62,36 @@ Material Mesh::GetMaterial() noexcept {
 
 std::vector<D3D11_INPUT_ELEMENT_DESC> Mesh::GetLayout() noexcept {
 	return layout;
+}
+
+void Mesh::LoadFromFile(LPCSTR path) {
+	Assimp::Importer aImp;
+
+	const auto pModel = aImp.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+	const auto pMesh = pModel->mMeshes[0];
+
+	const int numVertices = pMesh->mNumVertices;
+	vertices.reserve(numVertices);
+
+	for (auto i = 0; i < numVertices; i++) {
+		vertices.push_back({
+			Vector3(pMesh->mVertices[i].x, pMesh->mVertices[i].x, pMesh->mVertices[i].x),
+			*reinterpret_cast<Vector3*>(&pMesh->mNormals[i]),
+			// TODO add UVs
+			});
+	}
+
+	const int numFaces = pMesh->mNumFaces;
+	indices.reserve(numFaces * 3);
+
+	for (auto i = 0; i < numFaces; i++) {
+		const auto& face = pMesh->mFaces[i];
+		assert(face.mNumIndices == 3);
+
+		for (auto index = 0; index < 3; index++) {
+			indices.push_back(face.mIndices[index]);
+		}
+	}
 }
 
 /*******************************************************************/

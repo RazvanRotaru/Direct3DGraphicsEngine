@@ -27,6 +27,10 @@ public:
 	static float Dot(DirectX::XMFLOAT2 a, DirectX::XMFLOAT4 b);
 	static float Dot(DirectX::XMFLOAT3 a, DirectX::XMFLOAT4 b);
 
+	static DirectX::XMFLOAT3 Add(DirectX::XMFLOAT3 a, DirectX::XMFLOAT3 b);
+	static DirectX::XMFLOAT3 Substract(DirectX::XMFLOAT3 a, DirectX::XMFLOAT3 b);
+
+
 	static DirectX::XMVECTOR Normalize(DirectX::XMVECTOR v);
 	static DirectX::XMVECTOR Normalize(Vector3 v);
 

@@ -24,6 +24,16 @@ float Math::Dot(DirectX::XMFLOAT3 a, DirectX::XMFLOAT4 b) {
 	return DirectX::XMVectorGetX(DirectX::XMVector3Dot(DirectX::XMLoadFloat3(&a), DirectX::XMLoadFloat4(&b)));
 }
 
+DirectX::XMFLOAT3 Math::Add(DirectX::XMFLOAT3 a, DirectX::XMFLOAT3 b)
+{
+	return { a.x + b.x, a.y + b.y, a.z + b.z};
+}
+
+DirectX::XMFLOAT3 Math::Substract(DirectX::XMFLOAT3 a, DirectX::XMFLOAT3 b)
+{
+	return { a.x - b.x, a.y - b.y, a.z - b.z };
+}
+
 DirectX::XMVECTOR Math::Normalize(DirectX::XMVECTOR v)
 {
 	return DirectX::XMVector3Normalize(v);

@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "Math.h"
 #include <sstream>
+#include "include\imgui\imgui_impl_win32.h"
 
 Window::WindowClass Window::WindowClass::wndClass;
 
@@ -64,6 +65,8 @@ Window::Window(int width, int height, LPCWSTR name) : width(width), height(heigh
 	if (hWnd == nullptr) { throw CHWND_LAST_EXCEPT(); }
 
 	ShowWindow(hWnd, SW_SHOW);
+
+	ImGui_ImplWin32_Init(hWnd);
 
 	pGfx = std::make_unique<Graphics>(hWnd);
 }
@@ -135,7 +138,14 @@ LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 	return pWnd->HandlMsg(hWnd, msg, wParam, lParam);
 }
 
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT Window::HandlMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam)) {
+		return true;
+	}
+	
 	switch (msg) {
 	case WM_CLOSE:
 		PostQuitMessage(105);

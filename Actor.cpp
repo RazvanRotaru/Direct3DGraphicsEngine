@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "BindableBase.h"
 #include "Renderer.h"
+#include "Rigidbody.h"
 
 Graphics* Actor::world;
 
@@ -37,6 +38,7 @@ void Actor::Tick(float dt) {
 void Actor::SetMesh(Mesh* const& mesh) {
 	this->mesh = mesh;
 	renderer->SetMesh(mesh);
+	rb = new Rigidbody(this);
 }
 
 Transform* Actor::GetTransform() const noexcept {
@@ -50,4 +52,9 @@ Renderer*& Actor::GetRenderer() noexcept
 
 Graphics*& Actor::GetWorld() noexcept {
 	return world;
+}
+
+Mesh*& Actor::GetMesh() noexcept
+{
+	return mesh;
 }
